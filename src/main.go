@@ -5,9 +5,11 @@ package main
 import (
 	"database/sql"
 	"electivos-ucn/src/database"
+	"electivos-ucn/src/utils"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 func setupRouter(db *sql.DB) *gin.Engine {
@@ -25,7 +27,13 @@ func setupRouter(db *sql.DB) *gin.Engine {
 }
 
 func main() {
-	db := database.DBConnection()
+	logrus.SetOutput(os.Stdout)
+	logrus.SetLevel(logrus.InfoLevel)
+	logrus.SetFormatter(&utils.LogFormat{})
+	logger := logrus.WithFields(nil)
+	logger.Info("Initializing app...")
+
+	db := database.DBConnection(logger)
 	r := setupRouter(db)
 	port := os.Getenv("PORT")
 	r.Run(port)
