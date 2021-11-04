@@ -1,9 +1,5 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Formulario struct {
 	Rut       string `json:"rut"`
 	Nombre    string `json:"nombre"`
@@ -61,8 +57,41 @@ type Carrera struct {
 
 // User defines the user in db
 type Admin_user struct {
-	gorm.Model
 	Name     string `json:"name"`
-	Email    string `json:"email" gorm:"unique"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+type Alumnoucn struct {
+
+	//Rut del alumno
+	Rut string `json:"rut"`
+	//Nombre del alumno
+	Nombre string `json:"nombre"`
+	//Apellido del alumno
+	Apellido string `json:"apellido"`
+	//Carrera del alumno
+	Carrera string
+	//El correo institucional del alumno
+	Correo string `json:"correo"`
+	//El curso con el semestre más retrasado.
+	Semestre_incompleto int `json:"semestre_incompleto_menor"`
+	//la cantidad de ramos que tiene inscritos en el presente semestre(example: los del primer semestre del 2021)
+	Cant_ramos int `json:"cantidad_ramos_inscritos"`
+	//La lista con todos los ramos que ha tomado durante su vida universitaria
+	Ramos []Ramo `json:"ramos_tomados"` //histórico (rendimiento)
+
+	//Electivo [3]Electivo
+}
+type Ramo struct {
+	//el código del ramo
+	Nrc string
+	//el nombre del ramo
+	Nombre string
+	//la nota del correspondiente ramo
+	Nota float64
+	//las veces que ha dado el alumno ese ramo
+	Oportunidad int
+	//la cantidad de créditos del ramo
+	Creditos int
 }
