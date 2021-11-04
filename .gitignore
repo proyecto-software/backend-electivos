@@ -48,11 +48,7 @@ Thumbs.db
 *.mov
 *.wmv
 
-#Kubernetes secrets
-k8s/dev/secrets.yaml
-k8s/prod/secrets.yaml
-#Local VS Code env vars
-.vscode/launch.json
+
 #Local Docker env vars
 .docker/.env
 #Go temporal files
