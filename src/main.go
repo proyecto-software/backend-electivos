@@ -17,14 +17,9 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 	r := gin.Default()
 	api := r.Group("/ucn")
 	{
-		public := api.Group("/public")
-		{
-			public.POST("/formulario", func(c *gin.Context) {
-				endpoint.Formulario(c, db, logger)
-			})
-			//public.POST("/data", controllers.TestEndPoint)
-		}
-
+		api.POST("/formulario", func(c *gin.Context) {
+			endpoint.Formulario(c, db, logger)
+		})
 	}
 	return r
 }
