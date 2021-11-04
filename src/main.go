@@ -5,6 +5,7 @@ package main
 import (
 	"database/sql"
 	"electivos-ucn/src/database"
+	"electivos-ucn/src/endpoint"
 	"electivos-ucn/src/utils"
 	"os"
 
@@ -12,13 +13,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func setupRouter(db *sql.DB) *gin.Engine {
+func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 	r := gin.Default()
 	api := r.Group("/ucn")
 	{
 		public := api.Group("/public")
 		{
-			public.POST("/login")
+			public.POST("/formulario", func(c *gin.Context) {
+				endpoint.Formulario(c, db, logger)
+			})
 			//public.POST("/data", controllers.TestEndPoint)
 		}
 
@@ -34,7 +37,7 @@ func main() {
 	logger.Info("Initializing app...")
 
 	db := database.DBConnection(logger)
-	r := setupRouter(db)
+	r := setupRouter(db, logger)
 	port := os.Getenv("PORT")
 	r.Run(port)
 }

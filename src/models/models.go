@@ -4,16 +4,27 @@ import (
 	"gorm.io/gorm"
 )
 
+type Formulario struct {
+	Rut       string `json:"rut"`
+	Nombre    string `json:"nombre"`
+	Correo    string `json:"correo"`
+	Carrera   string `json:"carrera"`
+	Cantidad  int    `json:"cantidad"`
+	Electivo1 string `json:"electivo1"`
+	Electivo2 string `json:"electivo2"`
+	Electivo3 string `json:"electivo3"`
+}
+
 type Administrador struct {
-	Id       int    `json:"Id_administrador"`
-	Correo   string `json:"Correo"`
-	Rut      string `json:"Rut"`
-	Password string `json:"Password"`
+	Id       int    `json:"ed_administrador"`
+	Correo   string `json:"correo"`
+	Rut      string `json:"rut"`
+	Password string `json:"password"`
 }
 type Profesor struct {
-	Id     int    `json:"Id_profesor"`
-	Nombre string `json:"Nombre"`
-	Correo string `json:"Correo"`
+	Id     int    `json:"id_profesor"`
+	Nombre string `json:"nombre"`
+	Correo string `json:"correo"`
 }
 
 type Electivo struct {
