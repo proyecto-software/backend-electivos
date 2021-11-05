@@ -20,6 +20,9 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.POST("/formulario", func(c *gin.Context) {
 			endpoint.Formulario(c, db, logger)
 		})
+		api.POST("/dashboard", func(c *gin.Context) {
+			endpoint.Formulario(c, db, logger)
+		})
 	}
 	return r
 }

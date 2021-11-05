@@ -11,7 +11,7 @@
             "program": "${workspaceRoot}/src",
             "env": {
                 "PORT": ":10000",
-                "SQL_CONNECTION_STRING":"host=localhost port=5432 user=postgres password=1234 dbname=administracion_electivos sslmode=disable"
+                "SQL_CONNECTION_STRING":"host=localhost port=5432 user=postgres password=23071099 dbname=administracion_electivos sslmode=disable"
 
             },
             "args": []
