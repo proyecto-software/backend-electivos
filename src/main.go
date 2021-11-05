@@ -13,6 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+//"electivos-ucn/src/function"
 func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 	r := gin.Default()
 	api := r.Group("/ucn")
@@ -23,6 +24,12 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.POST("/dashboard", func(c *gin.Context) {
 			endpoint.Formulario(c, db, logger)
 		})
+		/*  api.GET("/alumnos", func(c *gin.Context) {
+			function.getAlumnos(c,db,logger)
+		})  */
+		/* api.VIEW("/alumnos/{rut}", func(c *gin.Context) {
+			function.createIndicador(c, db, logger)
+		}) */
 	}
 	return r
 }
