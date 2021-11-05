@@ -43,18 +43,27 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 			postulacion.Id = i * 456
 			//
 			postulacion.Aprobado = false
-			postulacion.Cantidad = 0
-			if i == 3 {
+			postulacion.Cantidad = data.Cantidad
+			if data.Cantidad == 1 {
 				postulacion.Id_electivo = E1.Id
 				// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
 				solicitud.Id_Postulacion_1 = postulacion.Id
 			}
-			if i == 4 {
+			if data.Cantidad == 2 {
+				postulacion.Id_electivo = E1.Id
+				// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
+				solicitud.Id_Postulacion_1 = postulacion.Id
 				postulacion.Id_electivo = E2.Id
 				// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
 				solicitud.Id_Postulacion_2 = postulacion.Id
 			}
-			if i == 5 {
+			if data.Cantidad == 3 {
+				postulacion.Id_electivo = E1.Id
+				// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
+				solicitud.Id_Postulacion_1 = postulacion.Id
+				postulacion.Id_electivo = E2.Id
+				// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
+				solicitud.Id_Postulacion_2 = postulacion.Id
 				postulacion.Id_electivo = E3.Id
 				// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
 				solicitud.Id_Postulacion_3 = postulacion.Id
