@@ -26,9 +26,16 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		//deberia ser un serial
 		solicitud.Id = 821
 		//Electivos
-		E1 := function.Electivo_info(db, data.Electivo1)
-		E2 := function.Electivo_info(db, data.Electivo2)
-		E3 := function.Electivo_info(db, data.Electivo2)
+		var E1, E2, E3 models.Electivo
+		if data.Electivo1 != "" {
+			E1 = function.Electivo_info(db, data.Electivo1)
+		}
+		if data.Electivo2 != "" {
+			E2 = function.Electivo_info(db, data.Electivo2)
+		}
+		if data.Electivo3 != "" {
+			E3 = function.Electivo_info(db, data.Electivo3)
+		}
 
 		for i := 3; i < 6; i++ {
 			var postulacion models.Postulacion
