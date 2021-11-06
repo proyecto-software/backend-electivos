@@ -27,8 +27,13 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		/*  api.GET("/alumnos", func(c *gin.Context) {
 			function.getAlumnos(c,db,logger)
 		})  */
-		/* api.VIEW("/alumnos/{rut}", func(c *gin.Context) {
+		//indicador
+		/* api.VIEW("/{rut}", func(c *gin.Context) {
 			function.createIndicador(c, db, logger)
+		}) */
+		//para ver la info de un alumno en particular
+		/* api.GET("/{rut}", func(c *gin.Context) {
+			function.InformeCurricular(c, db, logger)
 		}) */
 	}
 	return r

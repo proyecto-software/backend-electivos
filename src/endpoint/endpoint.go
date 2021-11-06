@@ -87,3 +87,18 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 	}
 	return
 }
+
+/* func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Alumno) {
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"msg": "invalid json",
+		})
+		c.Abort()
+		return
+	} else {
+
+		function.getAlumno()
+	}
+	return
+} */

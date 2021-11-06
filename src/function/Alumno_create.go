@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func createAlumnos(w http.ResponseWriter, r *http.Request, alumnos []models.Alumnoucn) { //no va a ser necesario en el proyecto
@@ -27,4 +29,17 @@ func getAlumnos(w http.ResponseWriter, r *http.Request, alumnos []models.Alumnou
 	w.Header().Set("Content-Type", "application/json") //le manda el tipo de dato que va a mandar
 	json.NewEncoder(w).Encode(alumnos)
 
+}
+
+func getAlumno(w http.ResponseWriter, r *http.Request, alumnos []models.Alumno) {
+	vars := mux.Vars(r) //guarda el rut
+
+	alumnoRut := vars["rut"] //tiene que llamarse igual que en el router
+
+	for _, a := range alumnos {
+		if a.Rut == alumnoRut {
+			w.Header().Set("Content-Type", "application/json") //le manda el tipo de dato que va a mandar
+			json.NewEncoder(w).Encode(a)                       //se le responde con el alumno
+		}
+	}
 }
