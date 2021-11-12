@@ -90,7 +90,7 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 	return
 }
 
-/* func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry, r *http.Request) (data models.Alumno) {
+func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Alumno) {
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -99,11 +99,16 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		c.Abort()
 		return
 	} else {
-		vars := mux.Vars(r) //guarda el rut
-		alumnoRut := vars["rut"] //tiene que llamarse igual que en el router
+		var_rut := c.DefaultQuery("rut", "")
+		Alumno := function.Alumno_info(db, var_rut)
+		logger.Infof(Alumno.Nombre)
+		/*
+			vars := mux.Vars(r) //guarda el rut
+			alumnoRut := vars["rut"] //tiene que llamarse igual que en el router
 
-		function.Alumno_info(db, alumnoRut)
-		//function.getAlumno()
+			function.Alumno_info(db, alumnoRut)
+			//function.getAlumno()
+		*/
 	}
 	return
-} */
+}
