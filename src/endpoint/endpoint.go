@@ -9,6 +9,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+//"github.com/gorilla/mux"
+//ejecutar -> go mod tidy
 func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Formulario) {
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
@@ -88,7 +90,7 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 	return
 }
 
-/* func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Alumno) {
+/* func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry, r *http.Request) (data models.Alumno) {
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -97,8 +99,11 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		c.Abort()
 		return
 	} else {
+		vars := mux.Vars(r) //guarda el rut
+		alumnoRut := vars["rut"] //tiene que llamarse igual que en el router
 
-		function.getAlumno()
+		function.Alumno_info(db, alumnoRut)
+		//function.getAlumno()
 	}
 	return
 } */
