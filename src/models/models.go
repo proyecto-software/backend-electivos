@@ -44,11 +44,13 @@ type Solicitud struct {
 	Id_alumno        int `json:"Id_alumno"`
 }
 type Alumno struct {
-	Id         int    `json:"Id_alumno"`
-	Rut        string `json:"Rut"`
-	Nombre     string `json:"Nombre"`
-	Correo     string `json:"Correo"`
-	Id_carrera int    `json:"Id_carrera"`
+	Id                  int    `json:"Id_alumno"`
+	Rut                 string `json:"Rut"`
+	Nombre              string `json:"Nombre"`
+	Correo              string `json:"Correo"`
+	Id_carrera          int    `json:"Id_carrera"`
+	Semestre_incompleto int    `json:"Semetre_incompleto"`
+	Cantidad_ramos      int    `json:"Cantidad_ramos"`
 }
 type Carrera struct {
 	Id     int    `json:"Id_Carrera"`

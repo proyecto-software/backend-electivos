@@ -35,7 +35,7 @@ func Alumno_info(db *sql.DB, rut string) (alumno models.Alumno) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&alumno.Id, &alumno.Rut, &alumno.Nombre, &alumno.Correo, &alumno.Id_carrera)
+		err = rows.Scan(&alumno.Id, &alumno.Rut, &alumno.Nombre, &alumno.Correo, &alumno.Id_carrera, &alumno.Semestre_incompleto, &alumno.Cantidad_ramos)
 		if err != nil {
 			panic(err)
 		}
