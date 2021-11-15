@@ -26,6 +26,12 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.POST("/dashboard", func(c *gin.Context) {
 			endpoint.Formulario(c, db, logger)
 		})
+		api.GET("/electivos", func(c *gin.Context) {
+			endpoint.GetElectivos(c, db, logger)
+		})
+		api.GET("/carreras", func(c *gin.Context) {
+			endpoint.GetCarrera(c, db, logger)
+		})
 		/*  api.GET("/alumnos", func(c *gin.Context) {
 			function.getAlumnos(c,db,logger)
 		})  */

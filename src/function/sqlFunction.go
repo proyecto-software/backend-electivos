@@ -67,6 +67,29 @@ func Carrera_info(db *sql.DB, rut string) (carrera models.Carrera) {
 	return
 
 }
+func All_carrera_info(db *sql.DB) (carreras []models.Carrera) {
+
+	rows, err := db.Query("SELECT * FROM public.carrera ")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var carrera models.Carrera
+		err = rows.Scan(&carrera.Id, &carrera.Nombre)
+		if err != nil {
+			panic(err)
+		} else {
+			carreras = append(carreras, carrera)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
 
 func Electivo_info(db *sql.DB, nombre string) (electivo models.Electivo) {
 	rows, err := db.Query("SELECT * FROM public.electivo WHERE nombre = $1 ", nombre)
@@ -78,6 +101,28 @@ func Electivo_info(db *sql.DB, nombre string) (electivo models.Electivo) {
 		err = rows.Scan(&electivo.Id, &electivo.Nombre, &electivo.NRC, &electivo.Id_profesor)
 		if err != nil {
 			panic(err)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
+func All_electivo_info(db *sql.DB) (electivos []models.Electivo) {
+	rows, err := db.Query("SELECT * FROM public.electivo")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var electivo models.Electivo
+		err = rows.Scan(&electivo.Id, &electivo.Nombre, &electivo.NRC, &electivo.Id_profesor)
+		if err != nil {
+			panic(err)
+		} else {
+			electivos = append(electivos, electivo)
 		}
 	}
 	err = rows.Err()

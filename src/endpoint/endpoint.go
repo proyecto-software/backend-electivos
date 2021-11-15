@@ -112,3 +112,22 @@ func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 	}
 	return
 }
+
+func GetElectivos(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
+
+	carrera := c.DefaultQuery("carrera", "")
+	if carrera == "" {
+		data := function.All_electivo_info(db)
+		c.JSON(200, data)
+	}
+
+}
+
+func GetCarrera(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
+	carrera := c.DefaultQuery("carrera", "")
+	if carrera == "" {
+		data := function.All_carrera_info(db)
+		c.JSON(200, data)
+	}
+
+}
