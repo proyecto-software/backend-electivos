@@ -28,8 +28,8 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 			function.getAlumnos(c,db,logger)
 		})  */
 		//indicador
-		/* api.VIEW("/{rut}", func(c *gin.Context) {
-			function.createIndicador(c, db, logger)
+		/* api.GET("/Indicador", func(c *gin.Context) {
+			endpoint.createIndicador(c, db, logger)
 		}) */
 		//para ver la info de un alumno en particular
 		/* api.GET("/{rut}", func(c *gin.Context) {
