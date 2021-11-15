@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"electivos-ucn/src/database"
 	"electivos-ucn/src/endpoint"
+	"electivos-ucn/src/middlewares"
 	"electivos-ucn/src/utils"
 	"os"
 
@@ -16,6 +17,7 @@ import (
 //"electivos-ucn/src/function"
 func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 	r := gin.Default()
+	r.Use(middlewares.CORSMiddleware())
 	api := r.Group("/ucn")
 	{
 		api.POST("/formulario", func(c *gin.Context) {
