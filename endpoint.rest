@@ -1,0 +1,37 @@
+# Electivos backend #
+
+
+## Host
+@localhost=http://localhost:10000
+
+### set host
+@host = {{localhost}}
+
+##var
+
+###end var
+
+
+
+
+
+### GET Carreras disponibles en la bd
+GET {{host}}/ucn/carreras
+
+### GET Electivos disponibles en la bd
+GET {{host}}/ucn/electivos
+
+### POST formulario request
+POST {{host}}/ucn/formulario
+Content-Type: application/json
+
+{
+  "Rut": "202362761",
+  "Nombre": "Dionisio Alejandro Olivares Astudillo",
+  "Correo": "",
+  "Carrera": "ICCI",
+  "Cantidad": 3,
+  "Electivo1": "Redes 1",
+  "Electivo2": "Redes 2",
+  "Electivo3": "Redes 3"
+}
