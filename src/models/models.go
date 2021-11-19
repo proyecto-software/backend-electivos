@@ -64,6 +64,15 @@ type Admin_user struct {
 	Password string `json:"password"`
 }
 
+type Registro_Postulacion struct {
+	Id        int    `json:"id_registro_postulacion"`
+	Rut       string `json:"rut_alumno"`
+	Nombre    string `json:"nombre_alumno"`
+	Carrera   string `json:"carrera"`
+	Indicador string `json:"indicador"`
+	Electivo  string `json:"electivo"`
+}
+
 type Alumnoucn struct {
 
 	//Rut del alumno

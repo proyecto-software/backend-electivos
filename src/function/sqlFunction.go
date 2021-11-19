@@ -133,6 +133,29 @@ func All_electivo_info(db *sql.DB) (electivos []models.Electivo) {
 
 }
 
+func All_registro_postulacion_info(db *sql.DB) (reg_posts []models.Registro_Postulacion) {
+	rows, err := db.Query("SELECT * FROM public.registro_postulacion")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var reg_post models.Registro_Postulacion
+		err = rows.Scan(&reg_post.Id, &reg_post.Rut, &reg_post.Nombre, &reg_post.Carrera, &reg_post.Indicador, &reg_post.Electivo)
+		if err != nil {
+			panic(err)
+		} else {
+			reg_posts = append(reg_posts, reg_post)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
+
 func Postulacion_info(db *sql.DB, rut string) (postulacion models.Postulacion) {
 	rows, err := db.Query("SELECT * FROM public.postulacion WHERE rut = $1 ", rut)
 	if err != nil {
