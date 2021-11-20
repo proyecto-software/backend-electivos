@@ -13,6 +13,7 @@ import (
 //ejecutar -> go mod tidy
 func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Formulario) {
 	err := c.ShouldBindJSON(&data)
+
 	if err != nil {
 		c.JSON(400, gin.H{
 			"msg": "invalid json",
@@ -22,7 +23,6 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 	} else {
 		//TODO EL CODIGO PARA BD
 		var solicitud models.Solicitud
-
 		Alumno := function.Alumno_info(db, data.Rut)
 		solicitud.Id_alumno = Alumno.Id
 		//deberia ser un serial
@@ -87,6 +87,7 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		logger.Info(Alumno.Nombre)
 		c.JSON(200, "OK")
 	}
+
 	return
 }
 
@@ -128,6 +129,25 @@ func GetCarrera(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	if carrera == "" {
 		data := function.All_carrera_info(db)
 		c.JSON(200, data)
+	}
+
+}
+
+func Rut(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
+	var data models.Formulario
+	err := c.ShouldBindJSON(&data)
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"msg": "invalid json",
+		})
+		c.Abort()
+		return
+	} else {
+		valid := function.Validator(data.Rut, logger, c)
+		if valid {
+			c.JSON(200, "OK")
+		}
 	}
 
 }
