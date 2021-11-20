@@ -41,5 +41,5 @@ POST {{host}}/ucn/rut
 Content-Type: application/json
 
 {
-  "Rut": "19.1080.657-7"
+  "Rut": "19.239.494-1"
 }

@@ -26,8 +26,8 @@ type Profesor struct {
 type Electivo struct {
 	Id          int    `json:"id_Electivo"`
 	Nombre      string `json:"nombre"`
-	NRC         string `json:"nrc"`
-	Id_profesor int    `json:"id_profesor"`
+	NRC         string `json:"-"`
+	Id_profesor int    `json:"-"`
 }
 
 type Postulacion struct {
