@@ -14,9 +14,7 @@ func Validator(rut string, logger *logrus.Entry, c *gin.Context) bool {
 	number, err := strconv.Atoi(split[0])
 	if err != nil {
 		logger.Errorf("error en el rut")
-		c.JSON(400, gin.H{
-			"msg": "Error en el rut",
-		})
+		c.JSON(400, "RUT invalido")
 	}
 	code, err := strconv.Atoi(split[1])
 	if err != nil {
@@ -24,9 +22,7 @@ func Validator(rut string, logger *logrus.Entry, c *gin.Context) bool {
 			code = 10
 		} else {
 			logger.Errorf("error en el codigo verificador")
-			c.JSON(400, gin.H{
-				"msg": "Error en el codigo verificador",
-			})
+			c.JSON(400, "Codigo verificador invalido")
 			return false
 		}
 	}
@@ -37,9 +33,7 @@ func Validator(rut string, logger *logrus.Entry, c *gin.Context) bool {
 		for i, item := range Reverse(split[0]) {
 			if err != nil {
 				logger.Errorf("error en el rut")
-				c.JSON(200, gin.H{
-					"msg": "Error en el rut",
-				})
+				c.JSON(200, "OK")
 				return false
 			}
 			n, err := strconv.Atoi(string(item))
@@ -62,9 +56,7 @@ func Validator(rut string, logger *logrus.Entry, c *gin.Context) bool {
 		}
 		if code != dv_esperado {
 			logger.Errorf("rut invalido")
-			c.JSON(400, gin.H{
-				"msg": "Formato valido, rut invalido",
-			})
+			c.JSON(400, "Formato valido, rut invalido")
 			return false
 		} else {
 			logger.Errorf("rut valido")
@@ -73,9 +65,7 @@ func Validator(rut string, logger *logrus.Entry, c *gin.Context) bool {
 
 	} else {
 		logger.Errorf("error en el rut")
-		c.JSON(400, gin.H{
-			"msg": "Error en el rut",
-		})
+		c.JSON(400, "Error en el RUT")
 		return false
 	}
 }
