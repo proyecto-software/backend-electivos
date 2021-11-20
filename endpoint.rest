@@ -26,7 +26,7 @@ POST {{host}}/ucn/formulario
 Content-Type: application/json
 
 {
-  "Rut": "202362761",
+  "Rut": "19.100.657-7",
   "Nombre": "Dionisio Alejandro Olivares Astudillo",
   "Correo": "",
   "Carrera": "ICCI",
@@ -34,4 +34,12 @@ Content-Type: application/json
   "Electivo1": "Redes 1",
   "Electivo2": "Redes 2",
   "Electivo3": "Redes 3"
+}
+
+### POST rut validator 
+POST {{host}}/ucn/rut                  
+Content-Type: application/json
+
+{
+  "Rut": "19.1080.657-7"
 }

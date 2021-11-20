@@ -32,6 +32,9 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.GET("/carreras", func(c *gin.Context) {
 			endpoint.GetCarrera(c, db, logger)
 		})
+		api.POST("/rut", func(c *gin.Context) {
+			endpoint.Rut(c, db, logger)
+		})
 		/*  api.GET("/alumnos", func(c *gin.Context) {
 			function.getAlumnos(c,db,logger)
 		})  */
