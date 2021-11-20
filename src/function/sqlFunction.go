@@ -156,6 +156,52 @@ func All_registro_postulacion_info(db *sql.DB) (reg_posts []models.Registro_Post
 
 }
 
+func All_informe_curricular_info(db *sql.DB) (informes []models.Informe_Curricular) {
+	rows, err := db.Query("SELECT * FROM public.informe_curricular")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var informe models.Informe_Curricular
+		err = rows.Scan(&informe.Id, &informe.Rut_alumno, &informe.Nrc, &informe.Nombre_ramo, &informe.Nota, &informe.Oportunidad, &informe.Semestre)
+		if err != nil {
+			panic(err)
+		} else {
+			informes = append(informes, informe)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
+
+func All_registro_electivos_info(db *sql.DB) (reg_elecs []models.Registro_Electivos) {
+	rows, err := db.Query("SELECT * FROM public.registro_electivos")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var reg_elec models.Registro_Electivos
+		err = rows.Scan(&reg_elec.Id, &reg_elec.Nombre, &reg_elec.Cantidad_alumnos, &reg_elec.Semestre)
+		if err != nil {
+			panic(err)
+		} else {
+			reg_elecs = append(reg_elecs, reg_elec)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
+
 func Postulacion_info(db *sql.DB, rut string) (postulacion models.Postulacion) {
 	rows, err := db.Query("SELECT * FROM public.postulacion WHERE rut = $1 ", rut)
 	if err != nil {
