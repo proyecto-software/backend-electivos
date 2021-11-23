@@ -21,6 +21,9 @@ GET {{host}}/ucn/carreras
 ### GET Electivos disponibles en la bd
 GET {{host}}/ucn/electivos
 
+### SEND EMAIL 
+GET {{host}}/ucn/email
+
 ### POST formulario request
 POST {{host}}/ucn/formulario
 Content-Type: application/json
