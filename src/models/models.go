@@ -37,11 +37,12 @@ type Postulacion struct {
 	Aprobado    bool `json:"aprovado"`
 }
 type Solicitud struct {
-	Id               int `json:"id_Solicitud"`
-	Id_Postulacion_1 int `json:"id_Postulacion_1"`
-	Id_Postulacion_2 int `json:"id_Postulacion_2"`
-	Id_Postulacion_3 int `json:"id_Postulacion_3"`
-	Id_alumno        int `json:"id_alumno"`
+	Id                 int `json:"id_Solicitud"`
+	Id_Postulacion_1   int `json:"id_Postulacion_1"`
+	Id_Postulacion_2   int `json:"id_Postulacion_2"`
+	Id_Postulacion_3   int `json:"id_Postulacion_3"`
+	Id_alumno          int `json:"id_alumno"`
+	Cantidad_Electivos int `json:"cantidad_electivos"`
 }
 type Alumno struct {
 	Id                  int    `json:"id_alumno"`
@@ -65,12 +66,14 @@ type Admin_user struct {
 }
 
 type Registro_Postulacion struct {
-	Id        int    `json:"id_registro_postulacion"`
-	Rut       string `json:"rut_alumno"`
-	Nombre    string `json:"nombre_alumno"`
-	Carrera   string `json:"carrera"`
-	Indicador string `json:"indicador"`
-	Electivo  string `json:"electivo"`
+	Id                 int    `json:"id_registro_postulacion"`
+	Rut                string `json:"rut_alumno"`
+	Nombre             string `json:"nombre_alumno"`
+	Carrera            string `json:"carrera"`
+	Indicador          string `json:"indicador"`
+	Electivo           string `json:"electivo"`
+	Cantidad_Electivos int    `json:"cantidad_electivos"`
+	Estado             bool   `json:"estado"`
 }
 
 type Alumnoucn struct {

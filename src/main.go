@@ -42,19 +42,12 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.POST("/rut", func(c *gin.Context) {
 			endpoint.Rut(c, db, logger)
 		})
-		/*  api.GET("/alumnos", func(c *gin.Context) {
-			function.getAlumnos(c,db,logger)
-		})  */
-		//indicador
-		/* api.GET("/Indicador", func(c *gin.Context) {
-			endpoint.createIndicador(c, db, logger)
-		}) */
-		//para ver la info de un alumno en particular
-		/* api.GET("/{rut}", func(c *gin.Context) {
-			function.InformeCurricular(c, db, logger)
-		}) */
+
 		api.GET("/InformeCurricular", func(c *gin.Context) {
 			endpoint.InformeCurricular(c, db, logger)
+		})
+		api.POST("/AprobarPostulacion", func(c *gin.Context) {
+			endpoint.EstadoPostulacion(c, db, logger)
 		})
 	}
 	return r
