@@ -53,8 +53,8 @@ type Alumno struct {
 	Cantidad_ramos      int    `json:"cantidad_ramos"`
 }
 type Carrera struct {
-	Id     int    `json:"id_Carrera"`
-	Nombre string `json:"nombre"`
+	Id     int    `json:"value"`
+	Nombre string `json:"labels"`
 }
 
 // User defines the user in db
