@@ -133,6 +133,75 @@ func All_electivo_info(db *sql.DB) (electivos []models.Electivo) {
 
 }
 
+func All_registro_postulacion_info(db *sql.DB) (reg_posts []models.Registro_Postulacion) {
+	rows, err := db.Query("SELECT * FROM public.registro_postulacion")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var reg_post models.Registro_Postulacion
+		err = rows.Scan(&reg_post.Id, &reg_post.Rut, &reg_post.Nombre, &reg_post.Carrera, &reg_post.Indicador, &reg_post.Electivo, &reg_post.Cantidad_Electivos, &reg_post.Estado)
+		if err != nil {
+			panic(err)
+		} else {
+			reg_posts = append(reg_posts, reg_post)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
+
+func All_informe_curricular_info(db *sql.DB) (informes []models.Informe_Curricular) {
+	rows, err := db.Query("SELECT * FROM public.informe_curricular")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var informe models.Informe_Curricular
+		err = rows.Scan(&informe.Id, &informe.Rut_alumno, &informe.Nrc, &informe.Nombre_ramo, &informe.Nota, &informe.Oportunidad, &informe.Semestre)
+		if err != nil {
+			panic(err)
+		} else {
+			informes = append(informes, informe)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
+
+func All_registro_electivos_info(db *sql.DB) (reg_elecs []models.Registro_Electivos) {
+	rows, err := db.Query("SELECT * FROM public.registro_electivos")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var reg_elec models.Registro_Electivos
+		err = rows.Scan(&reg_elec.Id, &reg_elec.Nombre, &reg_elec.Cantidad_alumnos, &reg_elec.Semestre)
+		if err != nil {
+			panic(err)
+		} else {
+			reg_elecs = append(reg_elecs, reg_elec)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
+
 func Postulacion_info(db *sql.DB, rut string) (postulacion models.Postulacion) {
 	rows, err := db.Query("SELECT * FROM public.postulacion WHERE rut = $1 ", rut)
 	if err != nil {
@@ -180,7 +249,7 @@ func Solicitud_info(db *sql.DB, rut string) (solicitud models.Solicitud) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&solicitud.Id, &solicitud.Id_alumno, &solicitud.Id_Postulacion_1, &solicitud.Id_Postulacion_2, &solicitud.Id_Postulacion_3)
+		err = rows.Scan(&solicitud.Id, &solicitud.Id_alumno, &solicitud.Id_Postulacion_1, &solicitud.Id_Postulacion_2, &solicitud.Id_Postulacion_3, &solicitud.Cantidad_Electivos)
 		if err != nil {
 			panic(err)
 		}
@@ -191,6 +260,50 @@ func Solicitud_info(db *sql.DB, rut string) (solicitud models.Solicitud) {
 	}
 	return
 
+}
+
+func Postulacion_approved(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {
+	approved1, e := db.Query("UPDATE public.registro_postulacion SET public.registro_postulacion.estado = true WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	approved2, e2 := db.Query("UPDATE public.postulacion SET public.postulacion.aprobado = true WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	if e != nil || e2 != nil {
+		logger.Infof("Error cambiando el estado")
+		recoverError()
+	} else {
+		logger.Infof("estado de la postulación Cargado con Exito")
+	}
+	logger.Infof("Fue aprobada la postulación", approved1, approved2)
+}
+
+func Postulacion_rejected(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {
+	rejected1, e := db.Query("UPDATE public.registro_postulacion SET public.registro_postulacion.estado = false WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	rejected2, e2 := db.Query("UPDATE public.postulacion SET public.postulacion.aprobado = false WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	if e != nil || e2 != nil {
+		logger.Infof("Error cambiando el estado")
+		recoverError()
+	} else {
+		logger.Infof("estado de la postulación Cargado con Exito")
+	}
+	logger.Infof("Fue aprobada la postulación", rejected1, rejected2)
+}
+
+func Cantidad_aceptados(db *sql.DB, rut string, registro_postulacion models.Registro_Postulacion, logger *logrus.Entry) int {
+	var cantidad int
+	rows, err := db.Query("SELECT COUNT(*) FROM public.registro_postulacion WHERE public.registro_postulacion.estado = true AND rut = $1", rut)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&cantidad)
+		if err != nil {
+			panic(err)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return cantidad
 }
 
 func Insert_postulacion(db *sql.DB, postulacion models.Postulacion, logger *logrus.Entry) {

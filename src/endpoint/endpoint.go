@@ -151,6 +151,7 @@ func Rut(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	}
 
 }
+
 func Correo(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	var data models.Formulario
 	err := c.ShouldBindJSON(&data)
@@ -167,4 +168,24 @@ func Correo(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 		}
 	}
 
+}
+func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Registro_Postulacion) {
+	var registro models.Registro_Postulacion
+	var postulacion models.Postulacion
+	cant_aceptados := function.Cantidad_aceptados(db, registro.Rut, registro, logger) //llame a la funcion sql
+	if cant_aceptados == 0 {
+		function.Postulacion_approved(db, registro.Rut, registro.Electivo, registro, postulacion, logger)
+	}
+	if cant_aceptados == 1 {
+		if registro.Estado == false && registro.Cantidad_Electivos == 2 {
+			function.Postulacion_approved(db, registro.Rut, registro.Electivo, registro, postulacion, logger)
+		} else {
+			function.Postulacion_rejected(db, registro.Rut, registro.Electivo, registro, postulacion, logger)
+		}
+	}
+	if cant_aceptados == 2 {
+		function.Postulacion_rejected(db, registro.Rut, registro.Electivo, registro, postulacion, logger)
+	}
+
+	return
 }

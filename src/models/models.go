@@ -37,11 +37,12 @@ type Postulacion struct {
 	Aprobado    bool `json:"aprovado"`
 }
 type Solicitud struct {
-	Id               int `json:"id_Solicitud"`
-	Id_Postulacion_1 int `json:"id_Postulacion_1"`
-	Id_Postulacion_2 int `json:"id_Postulacion_2"`
-	Id_Postulacion_3 int `json:"id_Postulacion_3"`
-	Id_alumno        int `json:"id_alumno"`
+	Id                 int `json:"id_Solicitud"`
+	Id_Postulacion_1   int `json:"id_Postulacion_1"`
+	Id_Postulacion_2   int `json:"id_Postulacion_2"`
+	Id_Postulacion_3   int `json:"id_Postulacion_3"`
+	Id_alumno          int `json:"id_alumno"`
+	Cantidad_Electivos int `json:"cantidad_electivos"`
 }
 type Alumno struct {
 	Id                  int    `json:"id_alumno"`
@@ -62,6 +63,17 @@ type Admin_user struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+type Registro_Postulacion struct {
+	Id                 int    `json:"id_registro_postulacion"`
+	Rut                string `json:"rut_alumno"`
+	Nombre             string `json:"nombre_alumno"`
+	Carrera            string `json:"carrera"`
+	Indicador          string `json:"indicador"`
+	Electivo           string `json:"electivo"`
+	Cantidad_Electivos int    `json:"cantidad_electivos"`
+	Estado             bool   `json:"estado"`
 }
 
 type Alumnoucn struct {
@@ -86,14 +98,33 @@ type Alumnoucn struct {
 	//Electivo [3]Electivo
 }
 type Ramo struct {
-	//el código del ramo
-	Nrc string
-	//el nombre del ramo
-	Nombre string
-	//la nota del correspondiente ramo
-	Nota float64
-	//las veces que ha dado el alumno ese ramo
-	Oportunidad int
-	//la cantidad de créditos del ramo
-	Creditos int
+	Id       int    `json:"id_ramo"`
+	Nrc      string `json:"nrc"`
+	Nombre   string `json:"nombre"`
+	Creditos int    `json:"créditos"`
+	Semestre int    `json:"semestre"`
+}
+
+type Ramo_Alumno struct {
+	Id_ramo     int     `json:"id_ramo"`
+	Id_alumno   int     `json:"id_alumno"`
+	Nota        float64 `json:"nota"`
+	Oportunidad int     `json:"oportunidad"`
+}
+
+type Registro_Electivos struct {
+	Id               int    `json:"id"`
+	Nombre           string `json:"nombre"`
+	Cantidad_alumnos int    `json:"cantidad_alumnos"`
+	Semestre         string `json:"Semestre"` //es string pq el profesor va a mandar con el semestre como ej: Segundo semestre 2020
+}
+
+type Informe_Curricular struct {
+	Id          int     `json:"id"`
+	Rut_alumno  string  `json:"rut_alumno"`
+	Nrc         string  `json:"nrc"`
+	Nombre_ramo string  `json:"nombre_ramo"`
+	Nota        float64 `json:"nota"`
+	Oportunidad int     `json:"oportunidad"`
+	Semestre    int     `json:"semestre"`
 }
