@@ -54,7 +54,7 @@ type Alumno struct {
 }
 type Carrera struct {
 	Id     int    `json:"value"`
-	Nombre string `json:"labels"`
+	Nombre string `json:"label"`
 }
 
 // User defines the user in db
