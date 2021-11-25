@@ -263,37 +263,46 @@ func Solicitud_info(db *sql.DB, rut string) (solicitud models.Solicitud) {
 }
 
 func Postulacion_approved(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {
-	_, e := db.Query("UPDATE public.registro_postulacion SET public.registro_postulacion.estado = true WHERE rut = $1 and electivo = $2 ", rut, electivo)
-	_, e2 := db.Query("UPDATE public.postulacion SET public.postulacion.aprobado = true WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	approved1, e := db.Query("UPDATE public.registro_postulacion SET public.registro_postulacion.estado = true WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	approved2, e2 := db.Query("UPDATE public.postulacion SET public.postulacion.aprobado = true WHERE rut = $1 and electivo = $2 ", rut, electivo)
 	if e != nil || e2 != nil {
 		logger.Infof("Error cambiando el estado")
 		recoverError()
 	} else {
 		logger.Infof("estado de la postulación Cargado con Exito")
 	}
+	logger.Infof("Fue aprobada la postulación", approved1, approved2)
 }
 
 func Postulacion_rejected(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {
-	_, e := db.Query("UPDATE public.registro_postulacion SET public.registro_postulacion.estado = false WHERE rut = $1 and electivo = $2 ", rut, electivo)
-	_, e2 := db.Query("UPDATE public.postulacion SET public.postulacion.aprobado = false WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	rejected1, e := db.Query("UPDATE public.registro_postulacion SET public.registro_postulacion.estado = false WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	rejected2, e2 := db.Query("UPDATE public.postulacion SET public.postulacion.aprobado = false WHERE rut = $1 and electivo = $2 ", rut, electivo)
 	if e != nil || e2 != nil {
 		logger.Infof("Error cambiando el estado")
 		recoverError()
 	} else {
 		logger.Infof("estado de la postulación Cargado con Exito")
 	}
+	logger.Infof("Fue aprobada la postulación", rejected1, rejected2)
 }
 
 func Cantidad_aceptados(db *sql.DB, rut string, registro_postulacion models.Registro_Postulacion, logger *logrus.Entry) int {
 	var cantidad int
-	/*cantidad, e := db.Query("SELECT COUNT(*) FROM public.registro_postulacion WHERE public.registro_postulacion.estado = true AND rut = $1", rut)
-	if e != nil {
-		logger.Infof("Error comprobando cantidad de aceptados")
-		recoverError()
-	} else {
-		logger.Infof("comprobación Cargada con Exito")
+	rows, err := db.Query("SELECT COUNT(*) FROM public.registro_postulacion WHERE public.registro_postulacion.estado = true AND rut = $1", rut)
+	if err != nil {
+		panic(err)
 	}
-	*/
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&cantidad)
+		if err != nil {
+			panic(err)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
 	return cantidad
 }
 
