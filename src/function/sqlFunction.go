@@ -242,8 +242,8 @@ func Profesor_info(db *sql.DB, rut string) (profesor models.Profesor) {
 
 }
 
-func Solicitud_info(db *sql.DB, rut string) (solicitud models.Solicitud) {
-	rows, err := db.Query("SELECT * FROM public.alumno WHERE rut = $1 ", rut)
+func Solicitud_info(db *sql.DB, id string) (solicitud models.Solicitud) {
+	rows, err := db.Query("SELECT id,id_alumno,id_postulacion_1,id_postulacion_2,id_postulacion_3,coalesce(cantidad_electivos,0) FROM public.solicitud WHERE id_alumno = $1 ", id)
 	if err != nil {
 		panic(err)
 	}
@@ -259,7 +259,27 @@ func Solicitud_info(db *sql.DB, rut string) (solicitud models.Solicitud) {
 		panic(err)
 	}
 	return
-
+}
+func All_Solicitud_info(db *sql.DB, id string) (solicitudes []models.Solicitud) {
+	rows, err := db.Query("SELECT id,id_alumno,id_postulacion_1,id_postulacion_2,id_postulacion_3,coalesce(cantidad_electivos,0) FROM public.solicitud")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var solicitud models.Solicitud
+		err = rows.Scan(&solicitud.Id, &solicitud.Id_alumno, &solicitud.Id_Postulacion_1, &solicitud.Id_Postulacion_2, &solicitud.Id_Postulacion_3, &solicitud.Cantidad_Electivos)
+		if err != nil {
+			panic(err)
+		} else {
+			solicitudes = append(solicitudes, solicitud)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
 }
 
 func Postulacion_approved(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {

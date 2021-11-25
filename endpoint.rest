@@ -10,11 +10,6 @@
 ##var
 
 ###end var
-
-
-
-
-
 ### GET Carreras disponibles en la bd
 GET {{host}}/ucn/carreras
 
@@ -52,5 +47,11 @@ POST {{host}}/ucn/correo
 Content-Type: application/json
 
 {
-  "Correo": "xxx@ucn.cl"
+  "Correo": "xxx@ucgn.cl"
 }
+
+
+
+### 
+GET {{host}}/ucn/solicitud
+?id=
