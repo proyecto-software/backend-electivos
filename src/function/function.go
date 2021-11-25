@@ -77,21 +77,3 @@ func Reverse(s string) string {
 	}
 	return string(runes)
 }
-
-func ValidatorCorreo(correo string, logger *logrus.Entry, c *gin.Context) (valid bool) {
-	split := strings.Split(correo, "@")
-	CorreoValido := []string{"alumnos.ucn.cl", "ucn.cl"}
-
-	for i := 0; i < len(CorreoValido); i++ {
-		if split[1] == CorreoValido[i] {
-			valid = true
-		}
-	}
-	if !valid {
-		logger.Errorf("correo invalido")
-		c.JSON(400, "Formato no valido, correo invalido")
-		return false
-	} else {
-		return true
-	}
-}
