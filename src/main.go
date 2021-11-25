@@ -42,7 +42,7 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.POST("/rut", func(c *gin.Context) {
 			endpoint.Rut(c, db, logger)
 		})
-		api.GET("/correo", func(c *gin.Context) {
+		api.POST("/correo", func(c *gin.Context) {
 			endpoint.Correo(c, db, logger)
 		})
 		//indicador

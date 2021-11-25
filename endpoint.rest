@@ -46,3 +46,11 @@ Content-Type: application/json
 {
   "Rut": "19.239.494-1"
 }
+
+### POST correo validator 
+POST {{host}}/ucn/correo                  
+Content-Type: application/json
+
+{
+  "Correo": "xxx@ucn.cl"
+}

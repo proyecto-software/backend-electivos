@@ -154,7 +154,6 @@ func Rut(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 func Correo(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	var data models.Formulario
 	err := c.ShouldBindJSON(&data)
-
 	if err != nil {
 		c.JSON(400, gin.H{
 			"msg": "invalid json",
