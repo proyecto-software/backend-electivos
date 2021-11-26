@@ -43,7 +43,8 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		for i := 3; i < 6; i++ {
 			var postulacion models.Postulacion
 			//esto tampoco deberia estar
-			postulacion.Id = i * 3
+			//postulacion.Id = i * 3
+			postulacion.Id = function.MaximoID_postulacion(db, logger)
 			//
 			postulacion.Aprobado = false
 			postulacion.Cantidad = data.Cantidad

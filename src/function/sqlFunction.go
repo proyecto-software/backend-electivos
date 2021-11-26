@@ -353,6 +353,27 @@ func Cantidad_aceptados(db *sql.DB, rut string, logger *logrus.Entry) int {
 	if err != nil {
 		panic(err)
 	}
+	cantidad += 1
+	return cantidad
+}
+
+func MaximoID_postulacion(db *sql.DB, logger *logrus.Entry) int {
+	var cantidad int
+	rows, err := db.Query("SELECT MAX(id) FROM public.postulacion")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&cantidad)
+		if err != nil {
+			panic(err)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
 	return cantidad
 }
 
