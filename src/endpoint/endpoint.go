@@ -133,14 +133,9 @@ func GetCarrera(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 
 }
 func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
-	id := c.DefaultQuery("id", "")
-	if id != "" {
-		data := function.Solicitud_info(db, id)
-		c.JSON(200, data)
-	} else {
-		data := function.All_Solicitud_info(db, id)
-		c.JSON(200, data)
-	}
+
+	data := function.All_Solicitud_info(db)
+	c.JSON(200, data)
 
 }
 

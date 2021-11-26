@@ -260,7 +260,7 @@ func Solicitud_info(db *sql.DB, id string) (solicitud models.Registro_Postulacio
 	}
 	return
 }
-func All_Solicitud_info(db *sql.DB, id string) (solicitudes []models.Registro_Postulacion) {
+func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion) {
 	rows, err := db.Query("SELECT a.rut,r.carrera,r.indicador,r.electivo,r.estado FROM public.Registro_Postulacion as r inner join alumno a on a.rut =r.rut ")
 	if err != nil {
 		panic(err)

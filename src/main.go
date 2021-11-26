@@ -46,7 +46,7 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 			endpoint.Correo(c, db, logger)
 		})
 
-		api.GET("/solicitud", func(c *gin.Context) {
+		api.GET("/solicitudes", func(c *gin.Context) {
 			endpoint.GetSolicitud(c, db, logger)
 		})
 		//indicador
