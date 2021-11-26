@@ -135,6 +135,7 @@ func GetCarrera(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 
 	data := function.All_Solicitud_info(db)
+	var d []models.Registro_Postulacion2
 	var data_ models.Registro_Postulacion2
 	for i := 0; i < len(data); i++ {
 		if i == 0 {
@@ -164,7 +165,8 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 			}
 		}
 	}
-	c.JSON(200, data_)
+	d = append(d, data_)
+	c.JSON(200, d)
 
 }
 
