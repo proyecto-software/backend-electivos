@@ -66,7 +66,7 @@ type Admin_user struct {
 }
 
 type Registro_Postulacion struct {
-	Id                 int    `json:"id_registro_postulacion"`
+	Id                 int    `json:"-"`
 	Rut                string `json:"rut_alumno"`
 	Nombre             string `json:"-"`
 	Carrera            string `json:"carrera"`
