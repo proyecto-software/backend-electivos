@@ -133,3 +133,7 @@ type FormatoUpdate struct {
 	RutAlumnp      string `json:"rut_alumno"`
 	NombreElectivo string `json:"nombre_electivo"`
 }
+
+type FormularioAdmin struct {
+	Rut_alumno string `json:"rut_alumno"`
+}
