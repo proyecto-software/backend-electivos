@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"electivos-ucn/src/database"
 	"electivos-ucn/src/endpoint"
-	"electivos-ucn/src/function"
 	"electivos-ucn/src/middlewares"
 	"electivos-ucn/src/utils"
 	"os"
@@ -33,12 +32,12 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.GET("/carreras", func(c *gin.Context) {
 			endpoint.GetCarrera(c, db, logger)
 		})
-		api.GET("/email", func(c *gin.Context) {
+		/* api.GET("/email", func(c *gin.Context) {
 			function.SendEmail2("nicolas.garcia@alumnos.ucn.cl")
 			function.SendEmail2("ssp013@alumnos.ucn.cl")
 			function.SendEmail2("jose.flores02@alumnos.ucn.cl")
 			function.SendEmail2("dionisio.olivares@alumnos.ucn.cl")
-		})
+		}) */
 		api.POST("/rut", func(c *gin.Context) {
 			endpoint.Rut(c, db, logger)
 		})

@@ -156,7 +156,7 @@ func All_registro_postulacion_info(db *sql.DB) (reg_posts []models.Registro_Post
 
 }
 func Registro_postulacion_info(db *sql.DB, rut string) (reg_posts []models.Registro_Postulacion) {
-	rows, err := db.Query("SELECT * FROM public.registro_postulacion where rut=$1", rut)
+	rows, err := db.Query("SELECT id,rut,nombre,carrera,indicador,electivo,COALESCE(cantidad_electivos,0),estado FROM public.registro_postulacion where rut=$1", rut)
 	if err != nil {
 		panic(err)
 	}

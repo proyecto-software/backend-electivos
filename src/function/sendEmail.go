@@ -34,7 +34,7 @@ func SendEmail() {
 	}
 	fmt.Println("Email Sent Successfully!")
 }
-func SendEmail2(email string) {
+func SendEmail2(email, id, electivo string) {
 	m := gomail.NewMessage()
 
 	// Set E-Mail sender
@@ -44,12 +44,11 @@ func SendEmail2(email string) {
 	m.SetHeader("To", email)
 
 	// Set E-Mail subject
-	Estado := "ACEPTADO"
-	Electivo := "REDES INALAMBRICAS"
-	m.SetHeader("Subject", "El estado de su solicitud de electivo cambio a : "+Estado)
+	Estado := "ACEPTADA"
+	m.SetHeader("Subject", "SOLICITUD: "+Estado)
 
 	// Set E-Mail body. You can set plain text or html with text/html
-	m.SetBody("text/plain", "Has quedado seleccionado en el electivo: "+Electivo)
+	m.SetBody("text/plain", "El estado de su solicitud, de identificador: "+id+" pertenecitente al electivo: "+electivo+" cambio a : "+Estado)
 
 	// Settings for SMTP server
 	d := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("EMAIL"), os.Getenv("PASSWORD"))

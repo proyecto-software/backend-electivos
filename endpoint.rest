@@ -62,6 +62,6 @@ POST {{host}}/ucn/AprobarPostulacion
 Content-Type: application/json
 
 {
-  "rut_alumno": "19.100.657-7",
+  "rut_alumno": "19.239.594-1",
   "nombre_electivo":"E1"
 }

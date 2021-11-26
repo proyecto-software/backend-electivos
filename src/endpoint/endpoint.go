@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"electivos-ucn/src/function"
 	"electivos-ucn/src/models"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -26,7 +27,7 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		Alumno := function.Alumno_info(db, data.Rut)
 		solicitud.Id_alumno = Alumno.Id
 		//deberia ser un serial
-		solicitud.Id = 821
+		solicitud.Id = 3294
 		//Electivos
 		var E1, E2, E3 models.Electivo
 		if data.Electivo1 != "" {
@@ -42,7 +43,7 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		for i := 3; i < 6; i++ {
 			var postulacion models.Postulacion
 			//esto tampoco deberia estar
-			postulacion.Id = i * 456
+			postulacion.Id = i * 3
 			//
 			postulacion.Aprobado = false
 			postulacion.Cantidad = data.Cantidad
@@ -217,29 +218,30 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 
 	var postulacion models.Postulacion
 	cant_aceptados := function.Cantidad_aceptados(db, data.RutAlumnp, logger) //llame a la funcion sql
+	Alumno := function.Alumno_info(db, data.RutAlumnp)
 	registro := function.Registro_postulacion_info(db, data.RutAlumnp)
+	Sent := false
 	for i := 0; i < len(registro); i++ {
-		if cant_aceptados == 0 {
-			function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
-			function.SendEmail2("nicolas.garcia@alumnos.ucn.cl")
-			function.SendEmail2("ssp013@alumnos.ucn.cl")
-			function.SendEmail2("jose.flores02@alumnos.ucn.cl")
-			function.SendEmail2("dionisio.olivares@alumnos.ucn.cl")
-		}
-		if cant_aceptados == 1 {
-			//ARREGLAR CUANDO SE TIENE 1 ACEPTADO CON 2 ELECTIVOS Y SE QUIERE ELIMINAR ESE ACEPTADO
-			if registro[i].Estado == false && registro[i].Cantidad_Electivos == 2 {
+		if !Sent {
+			if cant_aceptados == 0 {
 				function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
-				function.SendEmail2("nicolas.garcia@alumnos.ucn.cl")
-				function.SendEmail2("ssp013@alumnos.ucn.cl")
-				function.SendEmail2("jose.flores02@alumnos.ucn.cl")
-				function.SendEmail2("dionisio.olivares@alumnos.ucn.cl")
-			} else {
+				function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
+				Sent = true
+
+			}
+			if cant_aceptados == 1 {
+				//ARREGLAR CUANDO SE TIENE 1 ACEPTADO CON 2 ELECTIVOS Y SE QUIERE ELIMINAR ESE ACEPTADO
+				if registro[i].Estado == false && registro[i].Cantidad_Electivos == 2 {
+					function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
+					function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
+					Sent = true
+				} else {
+					function.Postulacion_rejected(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
+				}
+			}
+			if cant_aceptados == 2 {
 				function.Postulacion_rejected(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 			}
-		}
-		if cant_aceptados == 2 {
-			function.Postulacion_rejected(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 		}
 	}
 	return
