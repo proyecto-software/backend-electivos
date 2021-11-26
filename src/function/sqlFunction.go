@@ -266,13 +266,16 @@ func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion) 
 		panic(err)
 	}
 	defer rows.Close()
+	i := 0
 	for rows.Next() {
 		var solicitud models.Registro_Postulacion
 		err = rows.Scan(&solicitud.Rut, &solicitud.Carrera, &solicitud.Indicador, &solicitud.Electivo, &solicitud.Estado)
 		if err != nil {
 			panic(err)
 		} else {
+			solicitud.IDGen = i
 			solicitudes = append(solicitudes, solicitud)
+			i = i + 1
 		}
 	}
 	err = rows.Err()
