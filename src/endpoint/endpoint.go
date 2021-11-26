@@ -188,21 +188,33 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 		})
 		c.Abort()
 	}
-	var registro models.Registro_Postulacion
+
 	var postulacion models.Postulacion
-	cant_aceptados := function.Cantidad_aceptados(db, registro.Rut, registro, logger) //llame a la funcion sql
-	if cant_aceptados == 0 {
-		function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro, postulacion, logger)
-	}
-	if cant_aceptados == 1 {
-		if registro.Estado == false && registro.Cantidad_Electivos == 2 {
-			function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro, postulacion, logger)
-		} else {
-			function.Postulacion_rejected(db, data.RutAlumnp, data.NombreElectivo, registro, postulacion, logger)
+	cant_aceptados := function.Cantidad_aceptados(db, data.RutAlumnp, logger) //llame a la funcion sql
+	registro := function.Registro_postulacion_info(db, data.RutAlumnp)
+	for i := 0; i < len(registro); i++ {
+		if cant_aceptados == 0 {
+			function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
+			function.SendEmail2("nicolas.garcia@alumnos.ucn.cl")
+			function.SendEmail2("ssp013@alumnos.ucn.cl")
+			function.SendEmail2("jose.flores02@alumnos.ucn.cl")
+			function.SendEmail2("dionisio.olivares@alumnos.ucn.cl")
 		}
-	}
-	if cant_aceptados == 2 {
-		function.Postulacion_rejected(db, data.RutAlumnp, data.NombreElectivo, registro, postulacion, logger)
+		if cant_aceptados == 1 {
+			//ARREGLAR CUANDO SE TIENE 1 ACEPTADO CON 2 ELECTIVOS Y SE QUIERE ELIMINAR ESE ACEPTADO
+			if registro[i].Estado == false && registro[i].Cantidad_Electivos == 2 {
+				function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
+				function.SendEmail2("nicolas.garcia@alumnos.ucn.cl")
+				function.SendEmail2("ssp013@alumnos.ucn.cl")
+				function.SendEmail2("jose.flores02@alumnos.ucn.cl")
+				function.SendEmail2("dionisio.olivares@alumnos.ucn.cl")
+			} else {
+				function.Postulacion_rejected(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
+			}
+		}
+		if cant_aceptados == 2 {
+			function.Postulacion_rejected(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
+		}
 	}
 	return
 }
