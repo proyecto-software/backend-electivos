@@ -72,9 +72,29 @@ type Registro_Postulacion struct {
 	Nombre             string `json:"-"`
 	Carrera            string `json:"carrera"`
 	Indicador          string `json:"indicador"`
-	Electivo           string `json:"electivo"`
 	Cantidad_Electivos int    `json:"cantidad_electivos"`
+	Electivo           string `json:"electivo"`
 	Estado             bool   `json:"estado"`
+}
+type Registro_Postulacion2 struct {
+	IDGen              int    `json:"id"`
+	Id                 int    `json:"-"`
+	Rut                string `json:"rut_alumno"`
+	Nombre             string `json:"-"`
+	Carrera            string `json:"carrera"`
+	Indicador          string `json:"indicador"`
+	Cantidad_Electivos int    `json:"cantidad_electivos"`
+	Electivo1          string `json:"electivo1"`
+	Estado1            bool   `json:"estado1"`
+	Electivo2          string `json:"electivo2"`
+	Estado2            bool   `json:"estado2"`
+	Electivo3          string `json:"electivo3"`
+	Estado3            bool   `json:"estado3"`
+}
+
+type ElectivoInfo struct {
+	Electivo string `json:"electivo"`
+	Estado   bool   `json:"estado"`
 }
 
 type Alumnoucn struct {

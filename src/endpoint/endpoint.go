@@ -135,7 +135,36 @@ func GetCarrera(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 
 	data := function.All_Solicitud_info(db)
-	c.JSON(200, data)
+	var data_ models.Registro_Postulacion2
+	for i := 0; i < len(data); i++ {
+		if i == 0 {
+			data_.Rut = data[i].Rut
+			data_.Carrera = data[i].Carrera
+			data_.Indicador = data[i].Indicador
+			data_.Cantidad_Electivos = data[i].Cantidad_Electivos
+			data_.Electivo1 = data[i].Electivo
+			data_.Estado1 = data[i].Estado
+		} else {
+			if data[i].Rut == data[i-0].Rut {
+				if data_.Electivo2 == "" {
+					data_.Electivo2 = data[i].Electivo
+					data_.Estado2 = data[i].Estado
+				}
+				if data_.Electivo3 == "" {
+					data_.Electivo3 = data[i].Electivo
+					data_.Estado3 = data[i].Estado
+				}
+			} else {
+				data_.Rut = data[i].Rut
+				data_.Carrera = data[i].Carrera
+				data_.Indicador = data[i].Indicador
+				data_.Cantidad_Electivos = data[i].Cantidad_Electivos
+				data_.Electivo1 = data[i].Electivo
+				data_.Estado1 = data[i].Estado
+			}
+		}
+	}
+	c.JSON(200, data_)
 
 }
 

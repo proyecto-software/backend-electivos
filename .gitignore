@@ -55,4 +55,4 @@ Thumbs.db
 src/__debug_bin
 
 .vscode
-.json
+*.json
