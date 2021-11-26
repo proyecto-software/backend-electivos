@@ -283,8 +283,8 @@ func All_Solicitud_info(db *sql.DB, id string) (solicitudes []models.Solicitud) 
 }
 
 func Postulacion_approved(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {
-	approved1, e := db.Query("UPDATE public.registro_postulacion SET public.registro_postulacion.estado = true WHERE rut = $1 and electivo = $2 ", rut, electivo)
-	approved2, e2 := db.Query("UPDATE public.postulacion SET public.postulacion.aprobado = true WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	approved1, e := db.Query(`UPDATE registro_postulacion SET registro_postulacion.estado = true WHERE registro_postulacion.rut = $1 and registro_postulacion.electivo = $2 `, rut, electivo)
+	approved2, e2 := db.Query(`UPDATE postulacion SET postulacion.aprobado = true WHERE registro_postulacion.rut = $1 and registro_postulacion.electivo = $2 `, rut, electivo)
 	if e != nil || e2 != nil {
 		logger.Infof("Error cambiando el estado")
 		recoverError()

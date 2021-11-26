@@ -128,3 +128,8 @@ type Informe_Curricular struct {
 	Oportunidad int     `json:"oportunidad"`
 	Semestre    int     `json:"semestre"`
 }
+
+type FormatoUpdate struct {
+	RutAlumnp      string `json:"rut_alumno"`
+	NombreElectivo string `json:"nombre_electivo"`
+}

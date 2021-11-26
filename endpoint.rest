@@ -53,5 +53,15 @@ Content-Type: application/json
 
 
 ### 
-GET {{host}}/ucn/solicitud
-?id=
+GET {{host}}/ucn/solicitud?id=
+
+
+
+### POST correo validator 
+POST {{host}}/ucn/AprobarPostulacion                  
+Content-Type: application/json
+
+{
+  "rut_alumno": "201676061",
+  "nombre_electivo":"E1"
+}
