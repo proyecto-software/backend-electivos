@@ -359,7 +359,7 @@ func Cantidad_aceptados(db *sql.DB, rut string, logger *logrus.Entry) int {
 
 func MaximoID_postulacion(db *sql.DB, logger *logrus.Entry) int {
 	var cantidad int
-	rows, err := db.Query("SELECT MAX(id) FROM public.postulacion")
+	rows, err := db.Query("SELECT MAX(public.postulacion.id) FROM public.postulacion")
 	if err != nil {
 		panic(err)
 	}
@@ -374,9 +374,9 @@ func MaximoID_postulacion(db *sql.DB, logger *logrus.Entry) int {
 	if err != nil {
 		panic(err)
 	}
+	cantidad += 1
 	return cantidad
 }
-
 func Insert_postulacion(db *sql.DB, postulacion models.Postulacion, logger *logrus.Entry) {
 	insertDynStmt := `INSERT INTO public.postulacion
 		VALUES ($1, $2, $3, $4);`
