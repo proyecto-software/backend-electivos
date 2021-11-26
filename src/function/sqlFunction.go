@@ -155,6 +155,28 @@ func All_registro_postulacion_info(db *sql.DB) (reg_posts []models.Registro_Post
 	return
 
 }
+func Registro_postulacion_info(db *sql.DB, rut string) (reg_posts []models.Registro_Postulacion) {
+	rows, err := db.Query("SELECT * FROM public.registro_postulacion where rut=$1", rut)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var reg_post models.Registro_Postulacion
+		err = rows.Scan(&reg_post.Id, &reg_post.Rut, &reg_post.Nombre, &reg_post.Carrera, &reg_post.Indicador, &reg_post.Electivo, &reg_post.Cantidad_Electivos, &reg_post.Estado)
+		if err != nil {
+			panic(err)
+		} else {
+			reg_posts = append(reg_posts, reg_post)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
 
 func All_informe_curricular_info(db *sql.DB) (informes []models.Informe_Curricular) {
 	rows, err := db.Query("SELECT * FROM public.informe_curricular")
@@ -286,20 +308,25 @@ func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion) 
 }
 
 func Postulacion_approved(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {
-	approved1, e := db.Query("UPDATE registro_postulacion SET registro_postulacion.estado = true WHERE registro_postulacion.rut = $1 and registro_postulacion.electivo = $2 ", rut, electivo)
-	approved2, e2 := db.Query("UPDATE postulacion SET postulacion.aprobado = true WHERE registro_postulacion.rut = $1 and registro_postulacion.electivo = $2 ", rut, electivo)
+	approved1, e := db.Query(`UPDATE registro_postulacion SET estado = true WHERE rut = $1 and electivo = $2 `, rut, electivo)
+	approved2, e2 := db.Query(`UPDATE postulacion SET aprobado = true WHERE (id = (SELECT id_postulacion_1 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) OR id = (SELECT id_postulacion_2 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) OR id = (SELECT id_postulacion_3 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) ) AND id_electivo = (SELECT id FROM electivo WHERE nombre = $2)`, rut, electivo)
 	if e != nil || e2 != nil {
 		logger.Infof("Error cambiando el estado")
 		recoverError()
 	} else {
 		logger.Infof("estado de la postulación Cargado con Exito")
-	}
+	} /*
+		SendEmail2("nicolas.garcia@alumnos.ucn.cl")
+		SendEmail2("ssp013@alumnos.ucn.cl")
+		SendEmail2("jose.flores02@alumnos.ucn.cl")
+		SendEmail2("dionisio.olivares@alumnos.ucn.cl")
+	*/
 	logger.Infof("Fue aprobada la postulación", approved1, approved2)
 }
 
 func Postulacion_rejected(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {
-	rejected1, e := db.Query("UPDATE public.registro_postulacion SET public.registro_postulacion.estado = false WHERE rut = $1 and electivo = $2 ", rut, electivo)
-	rejected2, e2 := db.Query("UPDATE public.postulacion SET public.postulacion.aprobado = false WHERE rut = $1 and electivo = $2 ", rut, electivo)
+	rejected1, e := db.Query(`UPDATE registro_postulacion SET estado = false WHERE rut = $1 and electivo = $2 `, rut, electivo)
+	rejected2, e2 := db.Query(`UPDATE postulacion SET aprobado = false WHERE (id = (SELECT id_postulacion_1 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) OR id = (SELECT id_postulacion_2 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) OR id = (SELECT id_postulacion_3 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) ) AND id_electivo = (SELECT id FROM electivo WHERE nombre = $2)`, rut, electivo)
 	if e != nil || e2 != nil {
 		logger.Infof("Error cambiando el estado")
 		recoverError()
@@ -309,7 +336,7 @@ func Postulacion_rejected(db *sql.DB, rut string, electivo string, registro_post
 	logger.Infof("Fue aprobada la postulación", rejected1, rejected2)
 }
 
-func Cantidad_aceptados(db *sql.DB, rut string, registro_postulacion models.Registro_Postulacion, logger *logrus.Entry) int {
+func Cantidad_aceptados(db *sql.DB, rut string, logger *logrus.Entry) int {
 	var cantidad int
 	rows, err := db.Query("SELECT COUNT(*) FROM public.registro_postulacion WHERE public.registro_postulacion.estado = true AND rut = $1", rut)
 	if err != nil {
