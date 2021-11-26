@@ -53,7 +53,7 @@ Content-Type: application/json
 
 
 ### 
-GET {{host}}/ucn/solicitud
+GET {{host}}/ucn/solicitudes
 
 
 
