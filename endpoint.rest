@@ -63,5 +63,5 @@ Content-Type: application/json
 
 {
   "rut_alumno": "19.239.594-1",
-  "nombre_electivo":"E1"
+  "nombre_electivo":"E3"
 }

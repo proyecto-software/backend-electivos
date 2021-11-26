@@ -219,7 +219,7 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 	var postulacion models.Postulacion
 	cant_aceptados := function.Cantidad_aceptados(db, data.RutAlumnp, logger) //llame a la funcion sql
 	Alumno := function.Alumno_info(db, data.RutAlumnp)
-	registro := function.Registro_postulacion_info(db, data.RutAlumnp)
+	registro := function.Registro_postulacion_info(db, data.RutAlumnp, data.NombreElectivo)
 	Sent := false
 	for i := 0; i < len(registro); i++ {
 		if !Sent {
