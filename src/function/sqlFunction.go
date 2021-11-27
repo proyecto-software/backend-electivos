@@ -178,8 +178,8 @@ func Registro_postulacion_info(db *sql.DB, rut, electivo string) (reg_posts []mo
 
 }
 
-func All_informe_curricular_info(db *sql.DB) (informes []models.Informe_Curricular) {
-	rows, err := db.Query("SELECT * FROM public.informe_curricular")
+func All_informe_curricular_info(db *sql.DB, rut string) (informes []models.Informe_Curricular) {
+	rows, err := db.Query("SELECT * FROM public.informe_curricular WHERE rut_alumno = $1", rut)
 	if err != nil {
 		panic(err)
 	}
@@ -209,7 +209,7 @@ func All_registro_electivos_info(db *sql.DB) (reg_elecs []models.Registro_Electi
 	defer rows.Close()
 	for rows.Next() {
 		var reg_elec models.Registro_Electivos
-		err = rows.Scan(&reg_elec.Id, &reg_elec.Nombre, &reg_elec.Cantidad_alumnos, &reg_elec.Semestre)
+		err = rows.Scan(&reg_elec.Id, &reg_elec.Nombre, &reg_elec.Cantidad_alumnos, &reg_elec.Año, &reg_elec.Semestre)
 		if err != nil {
 			panic(err)
 		} else {
@@ -221,7 +221,28 @@ func All_registro_electivos_info(db *sql.DB) (reg_elecs []models.Registro_Electi
 		panic(err)
 	}
 	return
+}
 
+func Registro_electivos_info(db *sql.DB, año int, semestre int) (reg_elecs []models.Registro_Electivos) {
+	rows, err := db.Query("SELECT * FROM public.registro_electivos WHERE año = $1 AND semestre = $2", año, semestre)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var reg_elec models.Registro_Electivos
+		err = rows.Scan(&reg_elec.Id, &reg_elec.Nombre, &reg_elec.Cantidad_alumnos, &reg_elec.Año, &reg_elec.Semestre)
+		if err != nil {
+			panic(err)
+		} else {
+			reg_elecs = append(reg_elecs, reg_elec)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
 }
 
 func Postulacion_info(db *sql.DB, rut string) (postulacion models.Postulacion) {

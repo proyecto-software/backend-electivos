@@ -65,3 +65,21 @@ Content-Type: application/json
   "rut_alumno": "19.239.594-1",
   "nombre_electivo":"E2"
 }
+
+
+### GET registro electivos en un semestre
+GET {{host}}/ucn/Dashboard                  
+Content-Type: application/json
+
+{
+  "año": 2021,
+  "semestre":1
+}
+
+### GET informe curricular alumno
+GET {{host}}/ucn/InformeCurricular                  
+Content-Type: application/json
+
+{
+  "Rut": "201676061"
+}
