@@ -143,7 +143,7 @@ type Registro_Electivos struct {
 
 type Informe_Curricular struct {
 	Id          int     `json:"id"`
-	Rut_alumno  string  `json:"rut_alumno"`
+	Rut         string  `json:"rut"`
 	Nrc         string  `json:"nrc"`
 	Nombre_ramo string  `json:"nombre_ramo"`
 	Nota        float64 `json:"nota"`

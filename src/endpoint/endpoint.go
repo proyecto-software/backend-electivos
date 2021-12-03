@@ -117,9 +117,16 @@ func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 		c.Abort()
 		return
 	} else {
-		var_rut := c.DefaultQuery("rut", "")
-		Alumno := function.Alumno_info(db, var_rut)
-		logger.Infof(Alumno.Nombre)
+		info := function.Alumno_info(db, data.Rut)
+		var carrera string
+		if info.Id_carrera == 1 {
+			carrera = "ICCI"
+		} else if info.Id_carrera == 2 {
+			carrera = "ITI"
+		} else {
+			carrera = "ICI"
+		}
+		logger.Infof(info.Nombre, info.Correo, carrera, info.Semestre_incompleto)
 	}
 	return
 }
@@ -133,7 +140,7 @@ func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (d
 		c.Abort()
 		return
 	} else {
-		info := function.All_informe_curricular_info(db, data.Rut_alumno)
+		info := function.All_informe_curricular_info(db, data.Rut)
 		for i := 0; i < len(info); i++ {
 			logger.Infof(info[i].Nrc, info[i].Nombre_ramo, info[i].Nota, info[i].Semestre, info[i].Oportunidad)
 		}

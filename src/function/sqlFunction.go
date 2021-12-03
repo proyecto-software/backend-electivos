@@ -179,14 +179,14 @@ func Registro_postulacion_info(db *sql.DB, rut, electivo string) (reg_posts []mo
 }
 
 func All_informe_curricular_info(db *sql.DB, rut string) (informes []models.Informe_Curricular) {
-	rows, err := db.Query("SELECT * FROM public.informe_curricular WHERE rut_alumno = $1", rut)
+	rows, err := db.Query("SELECT * FROM public.informe_curricular WHERE rut = $1", rut)
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var informe models.Informe_Curricular
-		err = rows.Scan(&informe.Id, &informe.Rut_alumno, &informe.Nrc, &informe.Nombre_ramo, &informe.Nota, &informe.Oportunidad, &informe.Semestre)
+		err = rows.Scan(&informe.Id, &informe.Rut, &informe.Nrc, &informe.Nombre_ramo, &informe.Nota, &informe.Oportunidad, &informe.Semestre)
 		if err != nil {
 			panic(err)
 		} else {
