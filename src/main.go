@@ -57,7 +57,7 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		}) */
 
 		api.GET("/InformeCurricular", func(c *gin.Context) { //error: muestra solo la primera función
-			endpoint.InformeCurricular(c, db, logger)
+			//endpoint.InformeCurricular(c, db, logger)
 			endpoint.TablaInformeCurricular(c, db, logger)
 		})
 		api.POST("/AprobarPostulacion", func(c *gin.Context) {
