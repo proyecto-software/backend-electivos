@@ -150,7 +150,6 @@ func GetCarrera(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 
 }
 func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
-
 	data := function.All_Solicitud_info(db)
 	var d []models.Registro_Postulacion2
 	var data_ models.Registro_Postulacion2
@@ -181,9 +180,16 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 				data_.Estado1 = data[i].Estado
 			}
 		}
+		d = append(d, data_)
+
 	}
-	d = append(d, data_)
-	c.JSON(200, d)
+	if len(d) != 0 {
+		c.JSON(200, d)
+	} else {
+		ps := models.Registro_Postulacion2{}
+		d = append(d, ps)
+		c.JSON(204, "{}")
+	}
 
 }
 
