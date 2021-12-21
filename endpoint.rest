@@ -81,5 +81,5 @@ GET {{host}}/ucn/InformeCurricular
 Content-Type: application/json
 
 {
-  "Rut": "201676061"
+  "Rut": "20.167.606-1"
 }
