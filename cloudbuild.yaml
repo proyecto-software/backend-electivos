@@ -38,5 +38,6 @@ images:
 # CUSTOM VARIABLES
 substitutions:
   _COMPUTE_ZONE: us-west1
+  _CONTAINER_CLUSTER: nginx-1-cluster
   _REPO_NAME: backend-electivos
   _IMAGE_NAME: gcr.io/${PROJECT_ID}/${_REPO_NAME}/${BRANCH_NAME}:${COMMIT_SHA}
