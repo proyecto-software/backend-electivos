@@ -178,15 +178,15 @@ func Registro_postulacion_info(db *sql.DB, rut, electivo string) (reg_posts []mo
 
 }
 
-func All_informe_curricular_info(db *sql.DB) (informes []models.Informe_Curricular) {
-	rows, err := db.Query("SELECT * FROM public.informe_curricular")
+func All_informe_curricular_info(db *sql.DB, rut string) (informes []models.Informe_Curricular) {
+	rows, err := db.Query("SELECT * FROM public.informe_curricular WHERE rut = $1", rut)
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var informe models.Informe_Curricular
-		err = rows.Scan(&informe.Id, &informe.Rut_alumno, &informe.Nrc, &informe.Nombre_ramo, &informe.Nota, &informe.Oportunidad, &informe.Semestre)
+		err = rows.Scan(&informe.Id, &informe.Rut, &informe.Nrc, &informe.Nombre_ramo, &informe.Nota, &informe.Oportunidad, &informe.Semestre)
 		if err != nil {
 			panic(err)
 		} else {
@@ -209,7 +209,7 @@ func All_registro_electivos_info(db *sql.DB) (reg_elecs []models.Registro_Electi
 	defer rows.Close()
 	for rows.Next() {
 		var reg_elec models.Registro_Electivos
-		err = rows.Scan(&reg_elec.Id, &reg_elec.Nombre, &reg_elec.Cantidad_alumnos, &reg_elec.Semestre)
+		err = rows.Scan(&reg_elec.Id, &reg_elec.Nombre, &reg_elec.Cantidad_alumnos, &reg_elec.Año, &reg_elec.Semestre)
 		if err != nil {
 			panic(err)
 		} else {
@@ -221,7 +221,28 @@ func All_registro_electivos_info(db *sql.DB) (reg_elecs []models.Registro_Electi
 		panic(err)
 	}
 	return
+}
 
+func Registro_electivos_info(db *sql.DB, año int, semestre int) (reg_elecs []models.Registro_Electivos) {
+	rows, err := db.Query("SELECT * FROM public.registro_electivos WHERE año = $1 AND semestre = $2", año, semestre)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var reg_elec models.Registro_Electivos
+		err = rows.Scan(&reg_elec.Id, &reg_elec.Nombre, &reg_elec.Cantidad_alumnos, &reg_elec.Año, &reg_elec.Semestre)
+		if err != nil {
+			panic(err)
+		} else {
+			reg_elecs = append(reg_elecs, reg_elec)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
 }
 
 func Postulacion_info(db *sql.DB, rut string) (postulacion models.Postulacion) {
@@ -353,9 +374,30 @@ func Cantidad_aceptados(db *sql.DB, rut string, logger *logrus.Entry) int {
 	if err != nil {
 		panic(err)
 	}
+	cantidad += 1
 	return cantidad
 }
 
+func MaximoID_postulacion(db *sql.DB, logger *logrus.Entry) int {
+	var cantidad int
+	rows, err := db.Query("SELECT MAX(public.postulacion.id) FROM public.postulacion")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&cantidad)
+		if err != nil {
+			panic(err)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	cantidad += 1
+	return cantidad
+}
 func Insert_postulacion(db *sql.DB, postulacion models.Postulacion, logger *logrus.Entry) {
 	insertDynStmt := `INSERT INTO public.postulacion
 		VALUES ($1, $2, $3, $4);`

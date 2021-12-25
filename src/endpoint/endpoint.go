@@ -117,16 +117,52 @@ func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 		c.Abort()
 		return
 	} else {
-		var_rut := c.DefaultQuery("rut", "")
-		Alumno := function.Alumno_info(db, var_rut)
-		logger.Infof(Alumno.Nombre)
-		/*
-			vars := mux.Vars(r) //guarda el rut
-			alumnoRut := vars["rut"] //tiene que llamarse igual que en el router
+		info := function.Alumno_info(db, data.Rut)
+		var carrera string
+		if info.Id_carrera == 1 {
+			carrera = "ICCI"
+		} else if info.Id_carrera == 2 {
+			carrera = "ITI"
+		} else {
+			carrera = "ICI"
+		}
+		logger.Infof(info.Nombre, info.Correo, carrera, info.Semestre_incompleto)
+	}
+	return
+}
 
-			function.Alumno_info(db, alumnoRut)
-			//function.getAlumno()
-		*/
+func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Informe_Curricular) {
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"msg": "invalid json",
+		})
+		c.Abort()
+		return
+	} else {
+		info := function.All_informe_curricular_info(db, data.Rut)
+		for i := 0; i < len(info); i++ {
+			logger.Infof(info[i].Nrc, info[i].Nombre_ramo, info[i].Nota, info[i].Semestre, info[i].Oportunidad)
+		}
+	}
+	return
+
+}
+
+func RegistroElectivos(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Registro_Electivos) {
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"msg": "invalid json",
+		})
+		c.Abort()
+		return
+	} else {
+
+		Registro := function.Registro_electivos_info(db, data.Año, data.Semestre)
+		for i := 0; i < len(Registro); i++ {
+			logger.Infof(Registro[i].Nombre, Registro[i].Cantidad_alumnos)
+		}
 	}
 	return
 }

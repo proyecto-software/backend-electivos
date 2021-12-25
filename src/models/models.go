@@ -137,12 +137,13 @@ type Registro_Electivos struct {
 	Id               int    `json:"id"`
 	Nombre           string `json:"nombre"`
 	Cantidad_alumnos int    `json:"cantidad_alumnos"`
-	Semestre         string `json:"Semestre"` //es string pq el profesor va a mandar con el semestre como ej: Segundo semestre 2020
+	Año              int    `json:"año"`
+	Semestre         int    `json:"semestre"`
 }
 
 type Informe_Curricular struct {
 	Id          int     `json:"id"`
-	Rut_alumno  string  `json:"rut_alumno"`
+	Rut         string  `json:"rut"`
 	Nrc         string  `json:"nrc"`
 	Nombre_ramo string  `json:"nombre_ramo"`
 	Nota        float64 `json:"nota"`
