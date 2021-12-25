@@ -68,18 +68,12 @@ Content-Type: application/json
 
 
 ### GET registro electivos en un semestre
-GET {{host}}/ucn/Dashboard                  
-Content-Type: application/json
+GET {{host}}/ucn/Dashboard?semestre=2021-1            
 
-{
-  "año": 2021,
-  "semestre":1
-}
 
 ### GET informe curricular alumno
-GET {{host}}/ucn/InformeCurricular                  
-Content-Type: application/json
+GET {{host}}/ucn/InformeCurricular?rut=20.167.606-1
 
-{
-  "Rut": "20.167.606-1"
-}
+
+### GET informe curricular alumno
+GET {{host}}/ucn/TablaInformeCurricular?rut=20.167.606-1
