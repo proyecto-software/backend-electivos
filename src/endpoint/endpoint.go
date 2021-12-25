@@ -117,16 +117,16 @@ func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 		c.Abort()
 		return
 	} else {
-		info := function.Alumno_info(db, data.Rut)
-		var carrera string
+		info := function.Alumno_informe(db, data.Rut)
+		/*var carrera string
 		if info.Id_carrera == 1 {
 			carrera = "ICCI"
 		} else if info.Id_carrera == 2 {
 			carrera = "ITI"
 		} else {
 			carrera = "ICI"
-		}
-		logger.Infof(info.Nombre, info.Correo, carrera, info.Semestre_incompleto)
+		}*/
+		logger.Infof(info.Nombre, info.Correo, info.Nombre_carrera, info.Semestre_incompleto)
 	}
 	return
 }

@@ -48,6 +48,26 @@ func Alumno_info(db *sql.DB, rut string) (alumno models.Alumno) {
 
 }
 
+func Alumno_informe(db *sql.DB, rut string) (alumno models.Alumno2) {
+	rows, err := db.Query("select a.id,a.rut,a.nombre,a.correo,c.nombre,COALESCE(a.semestre_incompleto,0) ,COALESCE(a.cantidad_ramos,0) from (select * from public.alumno where rut = $1) as a inner join public.carrera as c on c.id = a.id_carrera ", rut)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&alumno.Id, &alumno.Rut, &alumno.Nombre, &alumno.Correo, &alumno.Nombre_carrera, &alumno.Semestre_incompleto, &alumno.Cantidad_ramos)
+		if err != nil {
+			panic(err)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}
+
 func Carrera_info(db *sql.DB, rut string) (carrera models.Carrera) {
 	rows, err := db.Query("SELECT * FROM public.carrera WHERE rut = $1 ", rut)
 	if err != nil {
