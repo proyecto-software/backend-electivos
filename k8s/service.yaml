@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: _REPO_NAME_-np
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    run: _REPO_NAME_
+  ports:
+    - name: http-api
+      port: 10000
+      targetPort: 10000
+    - name: https-api
+      port: 443
+      targetPort: 443
