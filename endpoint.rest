@@ -3,7 +3,7 @@
 
 ## Host
 @localhost=http://localhost:10000
-
+@domain=http://ucn.electivos.backend/
 ### set host
 @host = {{localhost}}
 
@@ -43,7 +43,7 @@ Content-Type: application/json
 }
 
 ### POST correo validator 
-POST {{host}}/ucn/correo                  
+POST {{domain}}/ucn/correo                  
 Content-Type: application/json
 
 {
