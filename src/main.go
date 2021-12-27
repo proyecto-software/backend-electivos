@@ -80,7 +80,7 @@ func main() {
 
 	db := database.DBConnection(logger)
 	r := setupRouter(db, logger)
-	//port := ":10000"
-	r.Run()
+	port := ":10000"
+	r.Run(port)
 	db.Close()
 }
