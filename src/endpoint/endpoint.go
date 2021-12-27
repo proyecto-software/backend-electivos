@@ -211,8 +211,8 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 					data_.Estado2 = data[i].Estado
 				}
 				if data_.Electivo3 == "" {
-					data_.Electivo3 = data[i].Electivo
-					data_.Estado3 = data[i].Estado
+					data_.Electivo3 = data[i+1].Electivo
+					data_.Estado3 = data[i+1].Estado
 				}
 			} else {
 				data_.Rut = data[i].Rut
