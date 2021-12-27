@@ -78,6 +78,6 @@ func main() {
 
 	db := database.DBConnection(logger)
 	r := setupRouter(db, logger)
-	port := os.Getenv("PORT")
+	port := ":10000"
 	r.Run(port)
 }

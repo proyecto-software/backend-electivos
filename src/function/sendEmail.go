@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/smtp"
-	"os"
 
 	gomail "gopkg.in/mail.v2"
 )
@@ -38,7 +37,7 @@ func SendEmail2(email, id, electivo string) {
 	m := gomail.NewMessage()
 
 	// Set E-Mail sender
-	m.SetHeader("From", os.Getenv("EMAIL"))
+	m.SetHeader("From", "soporte.inscripcion.alumnos@gmail.com")
 
 	// Set E-Mail receivers
 	m.SetHeader("To", email)
@@ -51,7 +50,7 @@ func SendEmail2(email, id, electivo string) {
 	m.SetBody("text/plain", "El estado de su solicitud, de identificador: "+id+" pertenecitente al electivo: "+electivo+" cambio a : "+Estado)
 
 	// Settings for SMTP server
-	d := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("EMAIL"), os.Getenv("PASSWORD"))
+	d := gomail.NewDialer("smtp.gmail.com", 587, "soporte.inscripcion.alumnos@gmail.com", "proyecto2021")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.
