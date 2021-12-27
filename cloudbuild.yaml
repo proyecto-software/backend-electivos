@@ -28,12 +28,25 @@ steps:
   env:
   - CLOUDSDK_COMPUTE_ZONE=${_COMPUTE_ZONE}
   - CLOUDSDK_CONTAINER_CLUSTER=${_CONTAINER_CLUSTER}
-
+- name: "gcr.io/cloud-builders/gcloud"
+  args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "backend-electivos",
+        "--image",
+        "gcr.io/$PROJECT_ID/backend-electivos:${SHORT_SHA}",
+        "--region",
+        "us-central1",
+        "--allow-unauthenticated",
+      ]
+  env:
+      - "PORT=8080"
   
 # PUBLISH DOCKER IMAGE IN CONTAINER REGISTRY
 images:
 - ${_IMAGE_NAME}
-
 
 # CUSTOM VARIABLES
 substitutions:
