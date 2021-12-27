@@ -1,40 +1,21 @@
-FROM golang:alpine AS builder
+FROM heroku/heroku:20-build as build
 
-RUN apk --no-cache add ca-certificates
-RUN apk add --no-cache tzdata
+COPY . /app
+WORKDIR /app
 
-# Set necessary environmet variables needed for our image
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64
+# Setup buildpack
+RUN mkdir -p /tmp/buildpack/heroku/go /tmp/build_cache /tmp/env
+RUN curl https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku/go.tgz | tar xz -C /tmp/buildpack/heroku/go
 
-# Move to working directory /build
-WORKDIR /build
+#Execute Buildpack
+RUN STACK=heroku-20 /tmp/buildpack/heroku/go/bin/compile /app /tmp/build_cache /tmp/env
 
-# Copy and download dependency using go mod
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
+# Prepare final, minimal image
+FROM heroku/heroku:20
 
-# Copy the code into the container
-COPY . .
-COPY /src .
-
-# Build the application
-RUN go build -o main .
-
-# Move to /dist directory as the place for resulting binary folder
-WORKDIR /dist
-
-# Copy binary from build to main folder
-RUN cp /build/main .
-
-# Build a small image
-FROM scratch
-
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /dist/main /
-
-# Command to run
-ENTRYPOINT ["/main"]
+COPY --from=build /app /app
+ENV HOME /app
+WORKDIR /app
+RUN useradd -m heroku
+USER heroku
+CMD /app/bin/backend-electivos

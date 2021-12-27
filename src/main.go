@@ -7,7 +7,6 @@ import (
 	"electivos-ucn/src/database"
 	"electivos-ucn/src/endpoint"
 	"electivos-ucn/src/middlewares"
-	"electivos-ucn/src/utils"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -58,7 +57,9 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 
 		api.GET("/InformeCurricular", func(c *gin.Context) { //error: muestra solo la primera función
 			endpoint.InformeCurricular(c, db, logger)
-			//endpoint.TablaInformeCurricular(c, db, logger)
+		})
+		api.GET("/TablaInformeCurricular", func(c *gin.Context) { //error: muestra solo la primera función
+			endpoint.TablaInformeCurricular(c, db, logger)
 		})
 		api.POST("/AprobarPostulacion", func(c *gin.Context) {
 			endpoint.EstadoPostulacion(c, db, logger)
@@ -73,12 +74,12 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 func main() {
 	logrus.SetOutput(os.Stdout)
 	logrus.SetLevel(logrus.InfoLevel)
-	logrus.SetFormatter(&utils.LogFormat{})
+	//logrus.SetFormatter(&utils.LogFormat{})
 	logger := logrus.WithFields(nil)
 	logger.Info("Initializing app...")
 
 	db := database.DBConnection(logger)
 	r := setupRouter(db, logger)
-	port := os.Getenv("PORT")
-	r.Run(port)
+	//port := ":10000"
+	r.Run()
 }
