@@ -7,7 +7,6 @@ import (
 	"electivos-ucn/src/database"
 	"electivos-ucn/src/endpoint"
 	"electivos-ucn/src/middlewares"
-	"electivos-ucn/src/utils"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -73,7 +72,7 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 func main() {
 	logrus.SetOutput(os.Stdout)
 	logrus.SetLevel(logrus.InfoLevel)
-	logrus.SetFormatter(&utils.LogFormat{})
+	//logrus.SetFormatter(&utils.LogFormat{})
 	logger := logrus.WithFields(nil)
 	logger.Info("Initializing app...")
 
