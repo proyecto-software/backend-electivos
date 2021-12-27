@@ -216,9 +216,9 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 				data_.Estado1 = data[i].Estado
 			}
 		}
-		d = append(d, data_)
 
 	}
+	d = append(d, data_)
 	if len(d) != 0 {
 		c.JSON(200, d)
 	} else {
