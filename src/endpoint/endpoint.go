@@ -101,7 +101,7 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 			} */
 
 		}
-		function.Insert_solicitud(db, solicitud, logger)
+		function.Insert_solicitud(db, solicitud, logger, data.Cantidad)
 		logger.Info(Alumno.Nombre)
 		c.JSON(200, "OK")
 	}
@@ -296,7 +296,8 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 			}
 			if cant_aceptados == 1 {
 				//ARREGLAR CUANDO SE TIENE 1 ACEPTADO CON 2 ELECTIVOS Y SE QUIERE ELIMINAR ESE ACEPTADO
-				if registro[i].Estado == false && registro[i].Cantidad_Electivos == 2 {
+				//if registro[i].Estado == false && registro[i].Cantidad_Electivos == 2 {
+				if !registro[i].Estado {
 					function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 					function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
 					Sent = true
