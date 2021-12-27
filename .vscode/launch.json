@@ -11,7 +11,7 @@
             "program": "${workspaceRoot}/src",
             "env": {
                 "PORT": ":10000",
-                "SQL_CONNECTION_STRING":"host=34.176.199.103 port=5432 user=postgres password=postgres dbname=administracion_electivos sslmode=disable",
+                "SQL_CONNECTION_STRING":"host=ec2-52-72-252-211.compute-1.amazonaws.com port=5432 user=spdkbddxynexbe password=2244405d1de4d94e500c668868571ea324040709be8beb1ae2fc1769e311a91d dbname=d4qsaefpehhcjp sslmode=disable",
                 "EMAIL": "soporte.inscripcion.alumnos@gmail.com",
                 "PASSWORD": "proyecto2021"
             },
