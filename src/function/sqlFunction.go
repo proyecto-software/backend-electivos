@@ -29,7 +29,7 @@ func Administrador_info(db *sql.DB, rut string) (admin models.Administrador) {
 }
 
 func Alumno_info(db *sql.DB, rut string) (alumno models.Alumno) {
-	rows, err := db.Query("SELECT id,rut,nombre,correo,id_carrera,COALESCE(semestre_incompleto,0) ,COALESCE(cantidad_ramos,0) FROM public.alumno WHERE rut = $1 ", rut)
+	rows, err := db.Query("SELECT a.id,rut,a.nombre,correo, c.nombre carrera, COALESCE(semestre_incompleto,0) FROM public.alumno a	join carrera c on a.id_carrera = c.id where rut = $1 ", rut)
 	if err != nil {
 		panic(err)
 	}

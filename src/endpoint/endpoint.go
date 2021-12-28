@@ -113,22 +113,10 @@ func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	rut := c.DefaultQuery("rut", "")
 	if rut != "" {
 		info := function.Alumno_info(db, rut)
-		/*
-			var carrera string
-			if info.Id_carrera == 1 {
-				carrera = "ICCI"
-			} else if info.Id_carrera == 2 {
-				carrera = "ITI"
-			} else {
-				carrera = "ICI"
-			}
-		*/
 		c.JSON(200, info)
 		return
 	} else if !function.Validator(rut, logger, c) {
-		//c.JSON(400, gin.H{
-		//	"msg": "invalid rut",
-		//})
+		c.JSON(204, nil)
 		c.Abort()
 		return
 
@@ -142,9 +130,7 @@ func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 		info := function.All_informe_curricular_info(db, rut)
 		c.JSON(200, info)
 	} else if !function.Validator(rut, logger, c) {
-		//c.JSON(400, gin.H{
-		//	"msg": "invalid rut",
-		//})
+		c.JSON(204, nil)
 		c.Abort()
 		return
 	}
@@ -292,7 +278,6 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 				function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 				function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
 				Sent = true
-
 			}
 			if cant_aceptados == 1 {
 				//ARREGLAR CUANDO SE TIENE 1 ACEPTADO CON 2 ELECTIVOS Y SE QUIERE ELIMINAR ESE ACEPTADO
