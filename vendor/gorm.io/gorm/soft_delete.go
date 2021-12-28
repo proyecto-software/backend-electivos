@@ -159,6 +159,6 @@ func (sd SoftDeleteDeleteClause) ModifyStatement(stmt *Statement) {
 		}
 
 		stmt.AddClauseIfNotExists(clause.Update{})
-		stmt.Build(stmt.DB.Callback().Update().Clauses...)
+		stmt.Build("UPDATE", "SET", "WHERE")
 	}
 }
