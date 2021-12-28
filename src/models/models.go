@@ -145,11 +145,11 @@ type Ramo_Alumno struct {
 }
 
 type Registro_Electivos struct {
-	Id               int    `json:"id"`
-	Nombre           string `json:"nombre"`
-	Cantidad_alumnos int    `json:"cantidad_alumnos"`
-	Año              int    `json:"año"`
-	Semestre         int    `json:"semestre"`
+	Id               int `json:"id"`
+	Id_electivo      int `json:"nombre"`
+	Cantidad_alumnos int `json:"cantidad_alumnos"`
+	Año              int `json:"año"`
+	Semestre         int `json:"semestre"`
 }
 
 type Informe_Curricular struct {

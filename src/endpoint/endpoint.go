@@ -160,7 +160,8 @@ func RegistroElectivos(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 
 		Registro := function.Registro_electivos_info(db, data.Año, data.Semestre)
 		for i := 0; i < len(Registro); i++ {
-			logger.Infof(Registro[i].Nombre, Registro[i].Cantidad_alumnos)
+			nombre := function.Nombre_electivo(db, Registro[i].Id_electivo)
+			logger.Infof(nombre, Registro[i].Cantidad_alumnos)
 		}
 	}
 	return
