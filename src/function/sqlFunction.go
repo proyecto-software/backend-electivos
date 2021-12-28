@@ -370,6 +370,7 @@ func Postulacion_rejected(db *sql.DB, rut string, electivo string, registro_post
 	} else {
 		logger.Infof("estado de la postulación Cargado con Exito")
 	}
+
 	defer rejected1.Close()
 	defer rejected2.Close()
 }
@@ -427,9 +428,9 @@ func Insert_postulacion(db *sql.DB, postulacion models.Postulacion, logger *logr
 	}
 }
 func Insert_solicitud(db *sql.DB, postulacion models.Solicitud, logger *logrus.Entry, cantidad int) {
-	insertDynStmt := `INSERT INTO public.solicitud
-		VALUES ($1, $2, $3, $4, $5,$6);`
-	_, e := db.Exec(insertDynStmt, &postulacion.Id, &postulacion.Id_alumno, &postulacion.Id_Postulacion_1, &postulacion.Id_Postulacion_2, &postulacion.Id_Postulacion_3, &cantidad)
+	insertDynStmt := `INSERT  INTO public.solicitud (id_alumno,id_postulacion_1,id_postulacion_2,id_postulacion_3,cantidad_electivos)
+		VALUES ($1, $2, $3, $4, $5);`
+	_, e := db.Exec(insertDynStmt, &postulacion.Id_alumno, &postulacion.Id_Postulacion_1, &postulacion.Id_Postulacion_2, &postulacion.Id_Postulacion_3, &cantidad)
 	if e != nil {
 		logger.Infof("Error solicitud")
 		recoverError()
