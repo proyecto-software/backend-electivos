@@ -21,10 +21,9 @@ type TimeType int64
 var TimeReflectType = reflect.TypeOf(time.Time{})
 
 const (
-	UnixTime        TimeType = 1
-	UnixSecond      TimeType = 2
-	UnixMillisecond TimeType = 3
-	UnixNanosecond  TimeType = 4
+	UnixSecond      TimeType = 1
+	UnixMillisecond TimeType = 2
+	UnixNanosecond  TimeType = 3
 )
 
 const (
@@ -252,9 +251,7 @@ func (schema *Schema) ParseField(fieldStruct reflect.StructField) *Field {
 	}
 
 	if v, ok := field.TagSettings["AUTOCREATETIME"]; ok || (field.Name == "CreatedAt" && (field.DataType == Time || field.DataType == Int || field.DataType == Uint)) {
-		if field.DataType == Time {
-			field.AutoCreateTime = UnixTime
-		} else if strings.ToUpper(v) == "NANO" {
+		if strings.ToUpper(v) == "NANO" {
 			field.AutoCreateTime = UnixNanosecond
 		} else if strings.ToUpper(v) == "MILLI" {
 			field.AutoCreateTime = UnixMillisecond
@@ -264,9 +261,7 @@ func (schema *Schema) ParseField(fieldStruct reflect.StructField) *Field {
 	}
 
 	if v, ok := field.TagSettings["AUTOUPDATETIME"]; ok || (field.Name == "UpdatedAt" && (field.DataType == Time || field.DataType == Int || field.DataType == Uint)) {
-		if field.DataType == Time {
-			field.AutoUpdateTime = UnixTime
-		} else if strings.ToUpper(v) == "NANO" {
+		if strings.ToUpper(v) == "NANO" {
 			field.AutoUpdateTime = UnixNanosecond
 		} else if strings.ToUpper(v) == "MILLI" {
 			field.AutoUpdateTime = UnixMillisecond
@@ -495,22 +490,21 @@ func (field *Field) setupValuerAndSetter() {
 				return
 			} else if field.FieldType.Kind() == reflect.Ptr {
 				fieldValue := field.ReflectValueOf(value)
-				fieldType := field.FieldType.Elem()
 
-				if reflectValType.AssignableTo(fieldType) {
+				if reflectValType.AssignableTo(field.FieldType.Elem()) {
 					if !fieldValue.IsValid() {
-						fieldValue = reflect.New(fieldType)
+						fieldValue = reflect.New(field.FieldType.Elem())
 					} else if fieldValue.IsNil() {
-						fieldValue.Set(reflect.New(fieldType))
+						fieldValue.Set(reflect.New(field.FieldType.Elem()))
 					}
 					fieldValue.Elem().Set(reflectV)
 					return
-				} else if reflectValType.ConvertibleTo(fieldType) {
+				} else if reflectValType.ConvertibleTo(field.FieldType.Elem()) {
 					if fieldValue.IsNil() {
-						fieldValue.Set(reflect.New(fieldType))
+						fieldValue.Set(reflect.New(field.FieldType.Elem()))
 					}
 
-					fieldValue.Elem().Set(reflectV.Convert(fieldType))
+					fieldValue.Elem().Set(reflectV.Convert(field.FieldType.Elem()))
 					return
 				}
 			}
@@ -526,7 +520,7 @@ func (field *Field) setupValuerAndSetter() {
 					err = setter(value, v)
 				}
 			} else {
-				return fmt.Errorf("failed to set value %+v to field %s", v, field.Name)
+				return fmt.Errorf("failed to set value %+v to field %v", v, field.Name)
 			}
 		}
 

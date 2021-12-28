@@ -387,45 +387,43 @@ func (db *DB) SetupJoinTable(model interface{}, field string, joinTable interfac
 		modelSchema, joinSchema *schema.Schema
 	)
 
-	err := stmt.Parse(model)
-	if err != nil {
+	if err := stmt.Parse(model); err == nil {
+		modelSchema = stmt.Schema
+	} else {
 		return err
 	}
-	modelSchema = stmt.Schema
 
-	err = stmt.Parse(joinTable)
-	if err != nil {
+	if err := stmt.Parse(joinTable); err == nil {
+		joinSchema = stmt.Schema
+	} else {
 		return err
 	}
-	joinSchema = stmt.Schema
 
-	relation, ok := modelSchema.Relationships.Relations[field]
-	isRelation := ok && relation.JoinTable != nil
-	if !isRelation {
+	if relation, ok := modelSchema.Relationships.Relations[field]; ok && relation.JoinTable != nil {
+		for _, ref := range relation.References {
+			if f := joinSchema.LookUpField(ref.ForeignKey.DBName); f != nil {
+				f.DataType = ref.ForeignKey.DataType
+				f.GORMDataType = ref.ForeignKey.GORMDataType
+				if f.Size == 0 {
+					f.Size = ref.ForeignKey.Size
+				}
+				ref.ForeignKey = f
+			} else {
+				return fmt.Errorf("missing field %s for join table", ref.ForeignKey.DBName)
+			}
+		}
+
+		for name, rel := range relation.JoinTable.Relationships.Relations {
+			if _, ok := joinSchema.Relationships.Relations[name]; !ok {
+				rel.Schema = joinSchema
+				joinSchema.Relationships.Relations[name] = rel
+			}
+		}
+
+		relation.JoinTable = joinSchema
+	} else {
 		return fmt.Errorf("failed to found relation: %s", field)
 	}
-
-	for _, ref := range relation.References {
-		f := joinSchema.LookUpField(ref.ForeignKey.DBName)
-		if f == nil {
-			return fmt.Errorf("missing field %s for join table", ref.ForeignKey.DBName)
-		}
-
-		f.DataType = ref.ForeignKey.DataType
-		f.GORMDataType = ref.ForeignKey.GORMDataType
-		if f.Size == 0 {
-			f.Size = ref.ForeignKey.Size
-		}
-		ref.ForeignKey = f
-	}
-
-	for name, rel := range relation.JoinTable.Relationships.Relations {
-		if _, ok := joinSchema.Relationships.Relations[name]; !ok {
-			rel.Schema = joinSchema
-			joinSchema.Relationships.Relations[name] = rel
-		}
-	}
-	relation.JoinTable = joinSchema
 
 	return nil
 }
@@ -440,19 +438,4 @@ func (db *DB) Use(plugin Plugin) error {
 	}
 	db.Plugins[name] = plugin
 	return nil
-}
-
-// ToSQL for generate SQL string.
-//
-// db.ToSQL(func(tx *gorm.DB) *gorm.DB {
-// 		return tx.Model(&User{}).Where(&User{Name: "foo", Age: 20})
-// 			.Limit(10).Offset(5)
-//			.Order("name ASC")
-//			.First(&User{})
-// })
-func (db *DB) ToSQL(queryFn func(tx *DB) *DB) string {
-	tx := queryFn(db.Session(&Session{DryRun: true}))
-	stmt := tx.Statement
-
-	return db.Dialector.Explain(stmt.SQL.String(), stmt.Vars...)
 }
