@@ -1,0 +1,56 @@
+steps:
+# DOCKER
+# Step: BUILD DOCKER IMAGE
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', '${_IMAGE_NAME}', '.']
+
+
+#DEPLOYMENT
+# Step: REPLACE VARIABLES IN DEPLOYMENT FILE
+- name: bash
+  args: ['sed', '-i', 's|_REPO_NAME_|${_REPO_NAME}|', './k8s/deployment.yaml']
+- name: bash
+  args: ['sed', '-i', 's|_IMAGE_NAME_|${_IMAGE_NAME}|', './k8s/deployment.yaml']
+# Step: APPLY DEPLOYMENT FILE
+- name: gcr.io/cloud-builders/kubectl
+  args: ['apply', '-f', 'k8s/deployment.yaml']
+  env:
+  - CLOUDSDK_COMPUTE_ZONE=${_COMPUTE_ZONE}
+  - CLOUDSDK_CONTAINER_CLUSTER=${_CONTAINER_CLUSTER}
+
+#SERVICE
+# Step: REPLACE VARIABLES IN SERVICE FILE
+- name: bash
+  args: ['sed', '-i', 's|_REPO_NAME_|${_REPO_NAME}|', './k8s/service.yaml']
+# Step: APPLY SERVICE FILE
+- name: gcr.io/cloud-builders/kubectl
+  args: ['apply', '-f', 'k8s/service.yaml']
+  env:
+  - CLOUDSDK_COMPUTE_ZONE=${_COMPUTE_ZONE}
+  - CLOUDSDK_CONTAINER_CLUSTER=${_CONTAINER_CLUSTER}
+- name: "gcr.io/cloud-builders/gcloud"
+  args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "backend-electivos",
+        "--image",
+        "gcr.io/$PROJECT_ID/backend-electivos:${SHORT_SHA}",
+        "--region",
+        "us-central1",
+        "--allow-unauthenticated",
+      ]
+  env:
+      - "PORT=8080"
+  
+# PUBLISH DOCKER IMAGE IN CONTAINER REGISTRY
+images:
+- ${_IMAGE_NAME}
+
+# CUSTOM VARIABLES
+substitutions:
+  _COMPUTE_ZONE: us-central1-a
+  _CONTAINER_CLUSTER: nginx-1-cluster
+  _REPO_NAME: backend-electivos
+  _IMAGE_NAME: gcr.io/${PROJECT_ID}/${_REPO_NAME}/${BRANCH_NAME}:${COMMIT_SHA}
