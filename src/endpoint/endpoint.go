@@ -5,6 +5,7 @@ import (
 	"electivos-ucn/src/function"
 	"electivos-ucn/src/models"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,6 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		Alumno := function.Alumno_info(db, data.Rut)
 		solicitud.Id_alumno = Alumno.Id
 		//deberia ser un serial
-		solicitud.Id = 3294
 		solicitud.Cantidad_Electivos = data.Cantidad
 		//Electivos
 		var E1, E2, E3 models.Electivo
@@ -100,7 +100,7 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 			} */
 
 		}
-		function.Insert_solicitud(db, solicitud, logger)
+		function.Insert_solicitud(db, solicitud, logger, data.Cantidad)
 		logger.Info(Alumno.Nombre)
 		c.JSON(200, "OK")
 	}
@@ -110,25 +110,40 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 
 func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	rut := c.DefaultQuery("rut", "")
-	if function.Validator(rut, logger, c) {
+	if rut != "" {
 		info := function.Alumno_info(db, rut)
+		/*
+			var carrera string
+			if info.Id_carrera == 1 {
+				carrera = "ICCI"
+			} else if info.Id_carrera == 2 {
+				carrera = "ITI"
+			} else {
+				carrera = "ICI"
+			}
+		*/
 		c.JSON(200, info)
 		return
-	} else {
-		c.JSON(204, nil)
+	} else if !function.Validator(rut, logger, c) {
+		//c.JSON(400, gin.H{
+		//	"msg": "invalid rut",
+		//})
 		c.Abort()
 		return
 
 	}
+	return
 }
 
 func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	rut := c.DefaultQuery("rut", "")
-	if function.Validator(rut, logger, c) {
+	if rut != "" {
 		info := function.All_informe_curricular_info(db, rut)
 		c.JSON(200, info)
-	} else {
-		c.JSON(204, nil)
+	} else if !function.Validator(rut, logger, c) {
+		//c.JSON(400, gin.H{
+		//	"msg": "invalid rut",
+		//})
 		c.Abort()
 		return
 	}
@@ -136,21 +151,24 @@ func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 
 }
 
-func RegistroElectivos(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.Registro_Electivos) {
-	err := c.ShouldBindJSON(&data)
-	if err != nil {
+func RegistroElectivos(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
+	query := c.DefaultQuery("semestre", "")
+	semestre := strings.Split(query, "-")
+	if len(semestre) != 2 {
 		c.JSON(400, gin.H{
-			"msg": "invalid json",
+			"msg": "invalid semestre",
 		})
 		c.Abort()
 		return
 	} else {
+		year, err1 := strconv.Atoi(semestre[0])
+		sem, err2 := strconv.Atoi(semestre[1])
 
-		Registro := function.Registro_electivos_info(db, data.Año, data.Semestre)
-		for i := 0; i < len(Registro); i++ {
-			nombre := function.Nombre_electivo(db, Registro[i].Id_electivo)
-			logger.Infof(nombre, Registro[i].Cantidad_alumnos)
+		if err1 == nil && err2 == nil {
+			Registro := function.Registro_electivos_info(db, year, sem)
+			c.JSON(200, Registro)
 		}
+
 	}
 	return
 }
@@ -177,6 +195,7 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	data := function.All_Solicitud_info(db)
 	var d []models.Registro_Postulacion2
 	var data_ models.Registro_Postulacion2
+	solicitud := true
 	for i := 0; i < len(data); i++ {
 		if i == 0 {
 			data_.Rut = data[i].Rut
@@ -186,27 +205,45 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 			data_.Electivo1 = data[i].Electivo
 			data_.Estado1 = data[i].Estado
 		} else {
-			if data[i].Rut == data[i-0].Rut {
+			if solicitud {
 				if data_.Electivo2 == "" {
 					data_.Electivo2 = data[i].Electivo
 					data_.Estado2 = data[i].Estado
 				}
 				if data_.Electivo3 == "" {
-					data_.Electivo3 = data[i].Electivo
-					data_.Estado3 = data[i].Estado
+					data_.Electivo3 = data[i+1].Electivo
+					data_.Estado3 = data[i+1].Estado
 				}
+				solicitud = false
+			}
+			if data[i-1].Rut == data[i].Rut {
+				if data_.Electivo2 == "" {
+					data_.Electivo2 = data[i].Electivo
+					data_.Estado2 = data[i].Estado
+				}
+				if data_.Electivo3 == "" {
+					data_.Electivo3 = data[i+1].Electivo
+					data_.Estado3 = data[i+1].Estado
+				}
+
 			} else {
-				data_.Rut = data[i].Rut
-				data_.Carrera = data[i].Carrera
-				data_.Indicador = data[i].Indicador
-				data_.Cantidad_Electivos = data[i].Cantidad_Electivos
-				data_.Electivo1 = data[i].Electivo
-				data_.Estado1 = data[i].Estado
+				if !solicitud {
+					d = append(d, data_)
+					//var data_ models.Registro_Postulacion2
+					data_.Rut = data[i].Rut
+					data_.Carrera = data[i].Carrera
+					data_.Indicador = data[i].Indicador
+					data_.Cantidad_Electivos = data[i].Cantidad_Electivos
+					data_.Electivo1 = data[i].Electivo
+					data_.Estado1 = data[i].Estado
+					solicitud = true
+					data_.IDGen = data_.IDGen + 1
+				}
 			}
 		}
-		d = append(d, data_)
 
 	}
+	d = append(d, data_)
 	if len(d) != 0 {
 		c.JSON(200, d)
 	} else {
@@ -273,10 +310,12 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 				function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 				function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
 				Sent = true
+
 			}
 			if cant_aceptados == 1 {
 				//ARREGLAR CUANDO SE TIENE 1 ACEPTADO CON 2 ELECTIVOS Y SE QUIERE ELIMINAR ESE ACEPTADO
-				if registro[i].Estado == false && registro[i].Cantidad_Electivos == 2 {
+				//if registro[i].Estado == false && registro[i].Cantidad_Electivos == 2 {
+				if !registro[i].Estado {
 					function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 					function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
 					Sent = true
