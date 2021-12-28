@@ -29,7 +29,6 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		Alumno := function.Alumno_info(db, data.Rut)
 		solicitud.Id_alumno = Alumno.Id
 		//deberia ser un serial
-		solicitud.Id = 3294
 		solicitud.Cantidad_Electivos = data.Cantidad
 		//Electivos
 		var E1, E2, E3 models.Electivo
@@ -196,6 +195,7 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	data := function.All_Solicitud_info(db)
 	var d []models.Registro_Postulacion2
 	var data_ models.Registro_Postulacion2
+	solicitud := true
 	for i := 0; i < len(data); i++ {
 		if i == 0 {
 			data_.Rut = data[i].Rut
@@ -205,7 +205,7 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 			data_.Electivo1 = data[i].Electivo
 			data_.Estado1 = data[i].Estado
 		} else {
-			if data[i].Rut == data[i-0].Rut {
+			if solicitud {
 				if data_.Electivo2 == "" {
 					data_.Electivo2 = data[i].Electivo
 					data_.Estado2 = data[i].Estado
@@ -214,13 +214,31 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 					data_.Electivo3 = data[i+1].Electivo
 					data_.Estado3 = data[i+1].Estado
 				}
+				solicitud = false
+			}
+			if data[i-1].Rut == data[i].Rut {
+				if data_.Electivo2 == "" {
+					data_.Electivo2 = data[i].Electivo
+					data_.Estado2 = data[i].Estado
+				}
+				if data_.Electivo3 == "" {
+					data_.Electivo3 = data[i+1].Electivo
+					data_.Estado3 = data[i+1].Estado
+				}
+
 			} else {
-				data_.Rut = data[i].Rut
-				data_.Carrera = data[i].Carrera
-				data_.Indicador = data[i].Indicador
-				data_.Cantidad_Electivos = data[i].Cantidad_Electivos
-				data_.Electivo1 = data[i].Electivo
-				data_.Estado1 = data[i].Estado
+				if !solicitud {
+					d = append(d, data_)
+					//var data_ models.Registro_Postulacion2
+					data_.Rut = data[i].Rut
+					data_.Carrera = data[i].Carrera
+					data_.Indicador = data[i].Indicador
+					data_.Cantidad_Electivos = data[i].Cantidad_Electivos
+					data_.Electivo1 = data[i].Electivo
+					data_.Estado1 = data[i].Estado
+					solicitud = true
+					data_.IDGen = data_.IDGen + 1
+				}
 			}
 		}
 
