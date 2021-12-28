@@ -53,6 +53,17 @@ type Alumno struct {
 	Semestre_incompleto int    `json:"semetre_incompleto"`
 	Cantidad_ramos      int    `json:"cantidad_ramos"`
 }
+
+type Alumno2 struct {
+	Id                  int    `json:"id_alumno"`
+	Rut                 string `json:"rut"`
+	Nombre              string `json:"nombre"`
+	Correo              string `json:"correo"`
+	Nombre_carrera      string `json:"nombre_carrera"`
+	Semestre_incompleto int    `json:"semetre_incompleto"`
+	Cantidad_ramos      int    `json:"cantidad_ramos"`
+}
+
 type Carrera struct {
 	Id     int    `json:"value"`
 	Nombre string `json:"label"`
@@ -134,11 +145,11 @@ type Ramo_Alumno struct {
 }
 
 type Registro_Electivos struct {
-	Id               int    `json:"id"`
-	Nombre           string `json:"nombre"`
-	Cantidad_alumnos int    `json:"cantidad_alumnos"`
-	Año              int    `json:"año"`
-	Semestre         int    `json:"semestre"`
+	Id               int `json:"id"`
+	Id_electivo      int `json:"nombre"`
+	Cantidad_alumnos int `json:"cantidad_alumnos"`
+	Año              int `json:"año"`
+	Semestre         int `json:"semestre"`
 }
 
 type Informe_Curricular struct {
