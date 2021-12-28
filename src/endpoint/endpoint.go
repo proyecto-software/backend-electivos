@@ -109,36 +109,27 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 
 func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	rut := c.DefaultQuery("rut", "")
-	if rut != "" {
+	if function.Validator(rut, logger, c) {
 		info := function.Alumno_info(db, rut)
 		c.JSON(200, info)
 		return
-	} else if !function.Validator(rut, logger, c) {
+	} else {
 		c.JSON(204, nil)
 		c.Abort()
 		return
-	} else {
-		info := function.Alumno_informe(db, data.Rut)
 
-		logger.Infof(info.Nombre, info.Correo, info.Nombre_carrera, info.Semestre_incompleto)
 	}
-	return
 }
 
 func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	rut := c.DefaultQuery("rut", "")
-	if rut != "" {
+	if function.Validator(rut, logger, c) {
 		info := function.All_informe_curricular_info(db, rut)
 		c.JSON(200, info)
-	} else if !function.Validator(rut, logger, c) {
+	} else {
 		c.JSON(204, nil)
 		c.Abort()
 		return
-	} else {
-		info := function.All_informe_curricular_info(db, data.Rut)
-		for i := 0; i < len(info); i++ {
-			logger.Infof(info[i].Nrc, info[i].Nombre_ramo, info[i].Nota, info[i].Semestre, info[i].Oportunidad)
-		}
 	}
 	return
 
