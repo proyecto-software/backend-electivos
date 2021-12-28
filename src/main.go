@@ -47,13 +47,6 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.GET("/solicitudes", func(c *gin.Context) {
 			endpoint.GetSolicitud(c, db, logger)
 		})
-		//indicador
-		/* api.GET("/Indicador", func(c *gin.Context) {
-		}) */
-		//para ver la info de un alumno en particular
-		/* api.GET("/{rut}", func(c *gin.Context) {
-			function.InformeCurricular(c, db, logger)
-		}) */
 
 		api.GET("/InformeCurricular", func(c *gin.Context) { //error: muestra solo la primera función
 			endpoint.InformeCurricular(c, db, logger)
