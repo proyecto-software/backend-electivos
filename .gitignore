@@ -54,5 +54,6 @@ Thumbs.db
 #Go temporal files
 src/__debug_bin
 
+vendor/
 .vscode
 *.json
