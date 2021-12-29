@@ -73,7 +73,6 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 	}
 	return r
 }
-
 func main() {
 	logrus.SetOutput(os.Stdout)
 	logrus.SetLevel(logrus.InfoLevel)
