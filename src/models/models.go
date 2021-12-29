@@ -166,3 +166,13 @@ type AnoSemestre struct {
 	Info     string `json:"semestre"`
 	Info2    string `json:"label"`
 }
+
+type CambioSolicitud struct {
+	Rut       string `json:"rut"`
+	Electivo1 string `json:"electivo1"`
+	Estado1   bool   `json:"estado1"`
+	Electivo2 string `json:"electivo2"`
+	Estado2   bool   `json:"estado2"`
+	Electivo3 string `json:"electivo3"`
+	Estado3   bool   `json:"estado3"`
+}

@@ -214,7 +214,7 @@ func Correo(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	}
 
 }
-func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.FormatoUpdate) {
+func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.CambioSolicitud) {
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -222,8 +222,21 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 		})
 		c.Abort()
 	}
-
-	var postulacion models.Postulacion
+	Alumno := function.Alumno_info(db, data.Rut)
+	if data.Estado1 {
+		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo1, logger)
+		function.SendEmail2(Alumno.Correo, data.Electivo1)
+	}
+	if data.Estado2 {
+		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo2, logger)
+		function.SendEmail2(Alumno.Correo, data.Electivo2)
+	}
+	if data.Estado3 {
+		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo2, logger)
+		function.SendEmail2(Alumno.Correo, data.Electivo3)
+	}
+	return
+	/* var postulacion models.Postulacion
 	cant_aceptados := function.Cantidad_aceptados(db, data.RutAlumnp, logger) //llame a la funcion sql
 	Alumno := function.Alumno_info(db, data.RutAlumnp)
 	registro := function.Registro_postulacion_info(db, data.RutAlumnp, data.NombreElectivo)
@@ -251,7 +264,7 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 			}
 		}
 	}
-	return
+	return */
 }
 func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	rut := c.DefaultQuery("rut", "")
