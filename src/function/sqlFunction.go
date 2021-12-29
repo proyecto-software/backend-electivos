@@ -305,7 +305,7 @@ func Solicitud_info(db *sql.DB, id string) (solicitud models.Registro_Postulacio
 	return
 }
 func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion) {
-	rows, err := db.Query("SELECT a.rut,r.carrera,r.indicador,r.electivo,r.estado FROM public.Registro_Postulacion as r inner join alumno a on a.rut =r.rut ")
+	rows, err := db.Query("SELECT a.rut,rp.carrera,rp.indicador,rp.electivo,rp.estado,cantidad_electivos  FROM public.solicitud s inner join alumno a on a.id = s.id_alumno inner join public.registro_postulacion rp on rp.rut = a.rut")
 	if err != nil {
 		panic(err)
 	}
@@ -313,7 +313,7 @@ func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion) 
 	i := 0
 	for rows.Next() {
 		var solicitud models.Registro_Postulacion
-		err = rows.Scan(&solicitud.Rut, &solicitud.Carrera, &solicitud.Indicador, &solicitud.Electivo, &solicitud.Estado)
+		err = rows.Scan(&solicitud.Rut, &solicitud.Carrera, &solicitud.Indicador, &solicitud.Electivo, &solicitud.Estado, &solicitud.Cantidad_Electivos)
 		if err != nil {
 			panic(err)
 		} else {
