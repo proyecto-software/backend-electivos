@@ -223,18 +223,18 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 		})
 		c.Abort()
 	}
-	Alumno := function.Alumno_info(db, data.Rut)
+	//Alumno := function.Alumno_info(db, data.Rut)
 	if data.Estado1 {
 		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo1, logger)
-		function.SendEmail2(Alumno.Correo, data.Electivo1)
+		//function.SendEmail2(Alumno.Correo, data.Electivo1)
 	}
 	if data.Estado2 {
 		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo2, logger)
-		function.SendEmail2(Alumno.Correo, data.Electivo2)
+		//function.SendEmail2(Alumno.Correo, data.Electivo2)
 	}
 	if data.Estado3 {
 		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo2, logger)
-		function.SendEmail2(Alumno.Correo, data.Electivo3)
+		//function.SendEmail2(Alumno.Correo, data.Electivo3)
 	}
 	return
 	/* var postulacion models.Postulacion
