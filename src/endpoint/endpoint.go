@@ -294,10 +294,9 @@ func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 		c.JSON(200, info)
 		return
 	} else {
-		c.JSON(204, nil)
-		c.Abort()
+		c.JSON(200, nil)
+		//c.Abort()
 		return
-
 	}
 }
 
@@ -307,9 +306,8 @@ func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 		info := function.All_informe_curricular_info(db, rut)
 		c.JSON(200, info)
 	} else {
-		c.JSON(204, nil)
-		c.Abort()
-		return
+		c.JSON(200, nil)
+		//c.Abort()
 	}
 	return
 

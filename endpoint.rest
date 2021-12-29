@@ -72,8 +72,8 @@ GET {{host}}/ucn/Dashboard?semestre=2021-1
 
 
 ### GET informe curricular alumno
-GET {{host}}/ucn/InformeCurricular?rut=20.167.606-1
+GET {{host}}/ucn/InformeCurricular?rut=20.167.605-1
 
 
 ### GET informe curricular alumno
-GET {{host}}/ucn/TablaInformeCurricular?rut=20.167.606-1
+GET {{host}}/ucn/TablaInformeCurricular?rut=19.100.657-7

@@ -179,6 +179,7 @@ func Registro_postulacion_info(db *sql.DB, rut, electivo string) (reg_posts []mo
 }
 
 func All_informe_curricular_info(db *sql.DB, rut string) (informes []models.Informe_Curricular) {
+	informes = []models.Informe_Curricular{}
 	rows, err := db.Query("SELECT * FROM public.informe_curricular WHERE rut = $1", rut)
 	if err != nil {
 		panic(err)
