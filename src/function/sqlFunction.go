@@ -466,6 +466,7 @@ func AnoSemestres(db *sql.DB) (informes []models.AnoSemestre) {
 		} else {
 			str_final := fmt.Sprintf("%d-%d", informe.Ano, informe.Semestre)
 			informe.Info = str_final
+			informe.Info2 = str_final
 			informes = append(informes, informe)
 		}
 	}

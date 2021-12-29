@@ -162,6 +162,7 @@ type FormularioAdmin struct {
 
 type AnoSemestre struct {
 	Ano      int    `json:"-"`
-	Semestre int    `json:"label"`
+	Semestre int    `json:"-"`
 	Info     string `json:"semestre"`
+	Info2    string `json:"label"`
 }
