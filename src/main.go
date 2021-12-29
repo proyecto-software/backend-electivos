@@ -77,7 +77,6 @@ func main() {
 	//logrus.SetFormatter(&utils.LogFormat{})
 	logger := logrus.WithFields(nil)
 	logger.Info("Initializing app...")
-
 	db := database.DBConnection(logger)
 	r := setupRouter(db, logger)
 	//port := ":10000"
