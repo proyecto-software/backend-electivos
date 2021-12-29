@@ -47,59 +47,26 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 		//
 		postulacion.Aprobado = false
 		postulacion.Cantidad = data.Cantidad
-		if data.Cantidad == 1 {
-			postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
-			postulacion.Id_electivo = E1.Id
-			// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
-			solicitud.Id_Postulacion_1 = postulacion.Id
-			function.Insert_postulacion(db, postulacion, logger)
-		}
-		if data.Cantidad == 2 {
-			postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
-			postulacion.Id_electivo = E1.Id
-			// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
-			solicitud.Id_Postulacion_1 = postulacion.Id
-			function.Insert_postulacion(db, postulacion, logger)
-			postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
 
-			postulacion.Id_electivo = E2.Id
-			// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
-			solicitud.Id_Postulacion_2 = postulacion.Id
-			function.Insert_postulacion(db, postulacion, logger)
-		}
-		if data.Cantidad == 3 {
-			postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
-			postulacion.Id_electivo = E1.Id
-			// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
-			solicitud.Id_Postulacion_1 = postulacion.Id
-			function.Insert_postulacion(db, postulacion, logger)
-			postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
-			time.Sleep(time.Second * 1)
+		postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
+		postulacion.Id_electivo = E1.Id
+		// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
+		solicitud.Id_Postulacion_1 = postulacion.Id
+		function.Insert_postulacion(db, postulacion, logger)
+		postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
+		time.Sleep(time.Second * 1)
 
-			postulacion.Id_electivo = E2.Id
-			// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
-			solicitud.Id_Postulacion_2 = postulacion.Id
-			function.Insert_postulacion(db, postulacion, logger)
-			postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
-			time.Sleep(time.Second * 1)
+		postulacion.Id_electivo = E2.Id
+		// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
+		solicitud.Id_Postulacion_2 = postulacion.Id
+		function.Insert_postulacion(db, postulacion, logger)
+		postulacion.Id = (time.Now().Second() * time.Now().Nanosecond()) / 10000
+		time.Sleep(time.Second * 1)
 
-			postulacion.Id_electivo = E3.Id
-			// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
-			solicitud.Id_Postulacion_3 = postulacion.Id
-			function.Insert_postulacion(db, postulacion, logger)
-
-			//	id := function.Insert_postulacion(db, postulacion, logger)
-			/* if i == 3 {
-				solicitud.Id_Postulacion_1 = id
-			}
-			if i == 4 {
-				solicitud.Id_Postulacion_2 = id
-			}
-			if i == 5 {
-				solicitud.Id_Postulacion_3 = id
-			} */
-
-		}
+		postulacion.Id_electivo = E3.Id
+		// AQUI VA UN SELECT POSTULACION RETURN ID.(AUTOINCREMENTO)
+		solicitud.Id_Postulacion_3 = postulacion.Id
+		function.Insert_postulacion(db, postulacion, logger)
 		function.Insert_solicitud(db, solicitud, logger, data.Cantidad)
 		logger.Info(Alumno.Nombre)
 		c.JSON(200, "OK")
@@ -267,7 +234,6 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 				function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 				function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
 				Sent = true
-
 			}
 			if cant_aceptados == 1 {
 				//ARREGLAR CUANDO SE TIENE 1 ACEPTADO CON 2 ELECTIVOS Y SE QUIERE ELIMINAR ESE ACEPTADO
