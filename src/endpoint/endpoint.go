@@ -153,6 +153,7 @@ func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 			} else {
 				if !solicitud {
 					d = append(d, data_)
+					data_ = models.Registro_Postulacion2{}
 					//var data_ models.Registro_Postulacion2
 					data_.Rut = data[i].Rut
 					data_.Carrera = data[i].Carrera
