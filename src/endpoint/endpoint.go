@@ -279,7 +279,6 @@ func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 		return
 	}
 }
-
 func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	rut := c.DefaultQuery("rut", "")
 	if function.Validator(rut, logger, c) {
