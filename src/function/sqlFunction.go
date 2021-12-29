@@ -33,7 +33,7 @@ func Alumno_info(db *sql.DB, rut string) (alumno models.Alumno) {
 	if err != nil {
 		panic(err)
 	}
-	defer rows.Close()
+	//defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&alumno.Id, &alumno.Rut, &alumno.Nombre, &alumno.Correo, &alumno.Nombre_carrera, &alumno.Semestre_incompleto)
 		if err != nil {
@@ -156,14 +156,14 @@ func All_registro_postulacion_info(db *sql.DB) (reg_posts []models.Registro_Post
 
 }
 func Registro_postulacion_info(db *sql.DB, rut, electivo string) (reg_posts []models.Registro_Postulacion) {
-	rows, err := db.Query("SELECT id,rut,nombre,carrera,indicador,estado FROM public.registro_postulacion where rut=$1 and electivo =$2 ", rut, electivo)
+	rows, err := db.Query("SELECT id,rut,nombre,carrera,indicador,estado,electivo FROM public.registro_postulacion where rut=$1 and electivo =$2 ", rut, electivo)
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var reg_post models.Registro_Postulacion
-		err = rows.Scan(&reg_post.Id, &reg_post.Rut, &reg_post.Nombre, &reg_post.Carrera, &reg_post.Indicador, &reg_post.Estado)
+		err = rows.Scan(&reg_post.Id, &reg_post.Rut, &reg_post.Nombre, &reg_post.Carrera, &reg_post.Indicador, &reg_post.Estado, &reg_post.Electivo)
 		if err != nil {
 			panic(err)
 		} else {
@@ -407,7 +407,7 @@ func Insert_postulacion(db *sql.DB, postulacion models.Postulacion, logger *logr
 	} else {
 		logger.Infof("postulacion Cargada con Exito")
 	}
-	defer db.Close()
+	//defer db.Close()
 }
 func Insert_solicitud(db *sql.DB, postulacion models.Solicitud, logger *logrus.Entry, cantidad int) {
 	insertDynStmt := `INSERT  INTO public.solicitud (id_alumno,id_postulacion_1,id_postulacion_2,id_postulacion_3,cantidad_electivos)
@@ -419,7 +419,7 @@ func Insert_solicitud(db *sql.DB, postulacion models.Solicitud, logger *logrus.E
 	} else {
 		logger.Infof("solicitud Cargada con Exito")
 	}
-	defer db.Close()
+	//defer db.Close()
 }
 func recoverError() {
 	defer func() {
