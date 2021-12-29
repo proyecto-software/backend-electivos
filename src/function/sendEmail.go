@@ -50,7 +50,7 @@ func SendEmail2(email, electivo string) {
 	m.SetBody("text/plain", "El estado de su solicitud pertenecitente al electivo: "+electivo+" cambio a : "+Estado)
 
 	// Settings for SMTP server
-	d := gomail.NewDialer("smtp.gmail.com", 587, "soporte.inscripcion.alumnos@gmail.com", "proyecto2021")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "soporte.inscripcion.alumnos@gmail.com", "prplataformas")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.
