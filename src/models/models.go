@@ -159,3 +159,9 @@ type FormatoUpdate struct {
 type FormularioAdmin struct {
 	Rut_alumno string `json:"rut_alumno"`
 }
+
+type AnoSemestre struct {
+	Ano      int    `json:"-"`
+	Semestre int    `json:"-"`
+	Info     string `json:"semestre"`
+}

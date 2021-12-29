@@ -450,3 +450,29 @@ func Nombre_electivo(db *sql.DB, id_electivo int) string {
 	return nombre
 
 }
+
+func AnoSemestres(db *sql.DB) (informes []models.AnoSemestre) {
+	informes = []models.AnoSemestre{}
+	rows, err := db.Query("SELECT distinct año, semestre FROM public.registro_electivos")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var informe models.AnoSemestre
+		err = rows.Scan(&informe.Ano, &informe.Semestre)
+		if err != nil {
+			panic(err)
+		} else {
+			str_final := fmt.Sprintf("%d-%d", informe.Ano, informe.Semestre)
+			informe.Info = str_final
+			informes = append(informes, informe)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return
+
+}

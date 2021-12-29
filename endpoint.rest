@@ -76,4 +76,7 @@ GET {{host}}/ucn/InformeCurricular?rut=20.167.605-1
 
 
 ### GET informe curricular alumno
-GET {{host}}/ucn/TablaInformeCurricular?rut=19.100.657-7
+GET {{host}}/ucn/TablaInformeCurricular?rut=20.236.276-1
+
+### GET informe curricular alumno
+GET {{host}}/ucn/semestres

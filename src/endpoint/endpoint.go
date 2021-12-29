@@ -278,3 +278,10 @@ func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	return
 
 }
+
+func GetInfoAnos(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
+
+	data := function.AnoSemestres(db)
+	c.JSON(200, data)
+
+}

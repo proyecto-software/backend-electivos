@@ -28,6 +28,9 @@ func setupRouter(db *sql.DB, logger *logrus.Entry) *gin.Engine {
 		api.GET("/electivos", func(c *gin.Context) {
 			endpoint.GetElectivos(c, db, logger)
 		})
+		api.GET("/semestres", func(c *gin.Context) {
+			endpoint.GetInfoAnos(c, db, logger)
+		})
 		api.GET("/carreras", func(c *gin.Context) {
 			endpoint.GetCarrera(c, db, logger)
 		})
@@ -79,7 +82,7 @@ func main() {
 	logger.Info("Initializing app...")
 	db := database.DBConnection(logger)
 	r := setupRouter(db, logger)
-	//port := ":10000"
-	r.Run()
+	port := ":10000"
+	r.Run(port)
 	db.Close()
 }
