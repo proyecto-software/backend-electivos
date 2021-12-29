@@ -49,7 +49,7 @@ type Alumno struct {
 	Rut                 string `json:"rut"`
 	Nombre              string `json:"nombre"`
 	Correo              string `json:"correo"`
-	Id_carrera          int    `json:"id_carrera"`
+	Nombre_carrera      string `json:"carrera"`
 	Semestre_incompleto int    `json:"semetre_incompleto"`
 	Cantidad_ramos      int    `json:"cantidad_ramos"`
 }

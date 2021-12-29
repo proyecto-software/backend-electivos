@@ -29,13 +29,13 @@ func Administrador_info(db *sql.DB, rut string) (admin models.Administrador) {
 }
 
 func Alumno_info(db *sql.DB, rut string) (alumno models.Alumno) {
-	rows, err := db.Query("SELECT id,rut,nombre,correo,id_carrera,COALESCE(semestre_incompleto,0) FROM public.alumno WHERE rut = $1 ", rut)
+	rows, err := db.Query("SELECT  a.id,rut,a.nombre,correo, c.nombre carrera, COALESCE(semestre_incompleto,0) FROM public.alumno a join carrera c on a.id_carrera = c.id where rut = $1 ", rut)
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&alumno.Id, &alumno.Rut, &alumno.Nombre, &alumno.Correo, &alumno.Id_carrera, &alumno.Semestre_incompleto)
+		err = rows.Scan(&alumno.Id, &alumno.Rut, &alumno.Nombre, &alumno.Correo, &alumno.Nombre_carrera, &alumno.Semestre_incompleto)
 		if err != nil {
 			panic(err)
 		}
@@ -224,7 +224,7 @@ func All_registro_electivos_info(db *sql.DB) (reg_elecs []models.Registro_Electi
 }
 
 func Registro_electivos_info(db *sql.DB, año int, semestre int) (reg_elecs []models.Registro_Electivos) {
-	rows, err := db.Query("SELECT * FROM public.registro_electivos WHERE año = $1 AND semestre = $2", año, semestre)
+	rows, err := db.Query("SELECT re.id, e.nombre, re.cantidad_alumnos, re.año, re.semestre from (SELECT * FROM public.registro_electivos WHERE año = $1 AND semestre = $2) as re inner join public.electivo e on e.id = re.id_electivo", año, semestre)
 	if err != nil {
 		panic(err)
 	}
@@ -406,6 +406,7 @@ func Insert_postulacion(db *sql.DB, postulacion models.Postulacion, logger *logr
 	} else {
 		logger.Infof("postulacion Cargada con Exito")
 	}
+	defer db.Close()
 }
 func Insert_solicitud(db *sql.DB, postulacion models.Solicitud, logger *logrus.Entry, cantidad int) {
 	insertDynStmt := `INSERT  INTO public.solicitud (id_alumno,id_postulacion_1,id_postulacion_2,id_postulacion_3,cantidad_electivos)
@@ -417,6 +418,7 @@ func Insert_solicitud(db *sql.DB, postulacion models.Solicitud, logger *logrus.E
 	} else {
 		logger.Infof("solicitud Cargada con Exito")
 	}
+	defer db.Close()
 }
 func recoverError() {
 	defer func() {
@@ -425,4 +427,25 @@ func recoverError() {
 		}
 	}()
 	panic("Error")
+}
+
+func Nombre_electivo(db *sql.DB, id_electivo int) string {
+	var nombre string
+	rows, err := db.Query("SELECT nombre FROM public.electivo WHERE id = $1 ", id_electivo)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&nombre)
+		if err != nil {
+			panic(err)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return nombre
+
 }

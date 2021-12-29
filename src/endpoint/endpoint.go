@@ -108,49 +108,6 @@ func Formulario(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data models.F
 	return
 }
 
-func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
-	rut := c.DefaultQuery("rut", "")
-	if rut != "" {
-		info := function.Alumno_info(db, rut)
-		/*
-			var carrera string
-			if info.Id_carrera == 1 {
-				carrera = "ICCI"
-			} else if info.Id_carrera == 2 {
-				carrera = "ITI"
-			} else {
-				carrera = "ICI"
-			}
-		*/
-		c.JSON(200, info)
-		return
-	} else if !function.Validator(rut, logger, c) {
-		//c.JSON(400, gin.H{
-		//	"msg": "invalid rut",
-		//})
-		c.Abort()
-		return
-
-	}
-	return
-}
-
-func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
-	rut := c.DefaultQuery("rut", "")
-	if rut != "" {
-		info := function.All_informe_curricular_info(db, rut)
-		c.JSON(200, info)
-	} else if !function.Validator(rut, logger, c) {
-		//c.JSON(400, gin.H{
-		//	"msg": "invalid rut",
-		//})
-		c.Abort()
-		return
-	}
-	return
-
-}
-
 func RegistroElectivos(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 	query := c.DefaultQuery("semestre", "")
 	semestre := strings.Split(query, "-")
@@ -329,4 +286,31 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 		}
 	}
 	return
+}
+func InformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
+	rut := c.DefaultQuery("rut", "")
+	if function.Validator(rut, logger, c) {
+		info := function.Alumno_info(db, rut)
+		c.JSON(200, info)
+		return
+	} else {
+		c.JSON(204, nil)
+		c.Abort()
+		return
+
+	}
+}
+
+func TablaInformeCurricular(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
+	rut := c.DefaultQuery("rut", "")
+	if function.Validator(rut, logger, c) {
+		info := function.All_informe_curricular_info(db, rut)
+		c.JSON(200, info)
+	} else {
+		c.JSON(204, nil)
+		c.Abort()
+		return
+	}
+	return
+
 }
