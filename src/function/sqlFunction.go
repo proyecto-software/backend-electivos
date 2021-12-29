@@ -329,12 +329,13 @@ func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion) 
 	return
 }
 
-func Postulacion_approved(db *sql.DB, rut string, electivo string, registro_postulacion models.Registro_Postulacion, postulacion models.Postulacion, logger *logrus.Entry) {
-	approved1, e := db.Query(`UPDATE registro_postulacion SET estado = true WHERE rut = $1 and electivo = $2 `, rut, electivo)
-	approved2, e2 := db.Query(`UPDATE postulacion SET aprobado = true WHERE (id = (SELECT id_postulacion_1 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) OR id = (SELECT id_postulacion_2 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) OR id = (SELECT id_postulacion_3 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $1)) ) AND id_electivo = (SELECT id FROM electivo WHERE nombre = $2)`, rut, electivo)
+func Postulacion_approved(db *sql.DB, estado bool, rut string, electivo string, logger *logrus.Entry) {
+	approved1, e := db.Query(`UPDATE registro_postulacion SET estado = $1 WHERE rut = $2 and electivo = $3 `, estado, rut, electivo)
+	approved2, e2 := db.Query(`UPDATE postulacion SET aprobado = $1 WHERE (id = (SELECT id_postulacion_1 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $2)) OR id = (SELECT id_postulacion_2 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $2)) OR id = (SELECT id_postulacion_3 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $2)) ) AND id_electivo = (SELECT id FROM electivo WHERE nombre = $3)`, estado, rut, electivo)
 	if e != nil || e2 != nil {
 		logger.Infof("Error cambiando el estado")
 		recoverError()
+
 	} else {
 		logger.Infof("estado de la postulación Cargado con Exito")
 	}
