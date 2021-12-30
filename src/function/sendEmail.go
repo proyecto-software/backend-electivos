@@ -4,10 +4,18 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/smtp"
+	"time"
 
 	gomail "gopkg.in/mail.v2"
 )
 
+func TimeIn(t time.Time, name string) (time.Time, error) {
+	loc, err := time.LoadLocation(name)
+	if err == nil {
+		t = t.In(loc)
+	}
+	return t, err
+}
 func SendEmail() {
 	from := "soporte.inscripcion.alumnos@gmail.com"
 	password := "proyecto2021"
@@ -33,7 +41,7 @@ func SendEmail() {
 	}
 	fmt.Println("Email Sent Successfully!")
 }
-func SendEmail2(email, electivo string, E bool) {
+func SendEmail2(email, electivo1, electivo3, electivo2 string, E1, E2, E3 bool, nombre string) {
 	m := gomail.NewMessage()
 
 	// Set E-Mail sender
@@ -43,17 +51,37 @@ func SendEmail2(email, electivo string, E bool) {
 	m.SetHeader("To", email)
 
 	// Set E-Mail subject
-	var Estado string
-	if E {
-		Estado = "ACEPTADA"
+	var Estado1 string
+	var Estado2 string
+	var Estado3 string
+	if E1 {
+		Estado1 = "ACEPTADA"
 	} else {
-		Estado = "RECHAZADA"
+		Estado1 = "RECHAZADA"
+	}
+	if E2 {
+		Estado2 = "ACEPTADA"
+	} else {
+		Estado2 = "RECHAZADA"
+	}
+	if E3 {
+		Estado3 = "ACEPTADA"
+	} else {
+		Estado3 = "RECHAZADA"
 	}
 
-	m.SetHeader("Subject", "SOLICITUD: "+Estado)
+	t, _ := TimeIn(time.Now(), "America/Santiago")
+	fecha := t.Format("2006-01-02 15:04:05")
+	m.SetHeader("Subject", "Postulacion Electivos")
 
 	// Set E-Mail body. You can set plain text or html with text/html
-	m.SetBody("text/plain", "El estado de su solicitud pertenecitente al electivo: "+electivo+" cambio a : "+Estado)
+	m.SetBody("text/plain", "Servicio de postulacion a electivos UCN \n\n"+
+		"Estimad@ "+nombre+" le infomamos que su solicitud para la toma de electivos ha cambiado con fecha: "+fecha+"\n "+
+		"Las siguientes postulaciones cambiaron su estado a :\n "+
+		"       "+electivo1+" Estado: "+Estado1+"\n "+
+		"       "+electivo2+" Estado: "+Estado2+"\n "+
+		"       "+electivo3+" Estado: "+Estado3+"\n \n "+
+		"No responder este correo")
 
 	// Settings for SMTP server
 	d := gomail.NewDialer("smtp.gmail.com", 587, "soporte.electivos.ucn@gmail.com", "proyecto2021")

@@ -176,15 +176,11 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 
 	function.PostulacionUpdate(db, data.Estado1, data.Rut, data.Electivo1, logger)
 
-	function.SendEmail2(Alumno.Correo, data.Electivo1, data.Estado1)
-
 	function.PostulacionUpdate(db, data.Estado2, data.Rut, data.Electivo2, logger)
-
-	function.SendEmail2(Alumno.Correo, data.Electivo2, data.Estado2)
 
 	function.PostulacionUpdate(db, data.Estado3, data.Rut, data.Electivo3, logger)
 
-	function.SendEmail2(Alumno.Correo, data.Electivo3, data.Estado3)
+	function.SendEmail2(Alumno.Correo, data.Electivo1, data.Electivo2, data.Electivo3, data.Estado1, data.Estado2, data.Estado2, Alumno.Nombre)
 
 	return
 	/* var postulacion models.Postulacion
