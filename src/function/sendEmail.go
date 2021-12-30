@@ -41,7 +41,7 @@ func SendEmail() {
 	}
 	fmt.Println("Email Sent Successfully!")
 }
-func SendEmail2(email, electivo1, electivo3, electivo2 string, E1, E2, E3 bool, nombre string) {
+func SendEmail2(email, electivo1, electivo2, electivo3 string, E1, E2, E3 bool, nombre string) {
 	m := gomail.NewMessage()
 
 	// Set E-Mail sender
@@ -94,7 +94,7 @@ func SendEmail2(email, electivo1, electivo3, electivo2 string, E1, E2, E3 bool, 
 		"          Estado  : "+Estado3+" \n "+
 		"\n"+
 
-		"No responder este correo")
+		"No responder este correo.")
 
 	// Settings for SMTP server
 	d := gomail.NewDialer("smtp.gmail.com", 587, "soporte.electivos.ucn@gmail.com", "proyecto2021")
