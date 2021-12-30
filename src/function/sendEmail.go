@@ -33,7 +33,7 @@ func SendEmail() {
 	}
 	fmt.Println("Email Sent Successfully!")
 }
-func SendEmail2(email, electivo string) {
+func SendEmail2(email, electivo string, E bool) {
 	m := gomail.NewMessage()
 
 	// Set E-Mail sender
@@ -43,7 +43,13 @@ func SendEmail2(email, electivo string) {
 	m.SetHeader("To", email)
 
 	// Set E-Mail subject
-	Estado := "ACEPTADA"
+	var Estado string
+	if E {
+		Estado = "ACEPTADA"
+	} else {
+		Estado = "RECHAZADA"
+	}
+
 	m.SetHeader("Subject", "SOLICITUD: "+Estado)
 
 	// Set E-Mail body. You can set plain text or html with text/html
