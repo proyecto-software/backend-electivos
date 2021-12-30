@@ -76,12 +76,24 @@ func SendEmail2(email, electivo1, electivo3, electivo2 string, E1, E2, E3 bool, 
 
 	// Set E-Mail body. You can set plain text or html with text/html
 	m.SetBody("text/plain", "Servicio de postulacion a electivos UCN \n\n"+
-		"Estimad@ "+nombre+" le infomamos que su solicitud para la toma de electivos ha cambiado con fecha: "+fecha+"\n "+
+		"Estimad@ "+nombre+" le infomamos que su solicitud para la toma de electivos ha cambiado con fecha: "+fecha+"\n"+
 		"Las siguientes postulaciones cambiaron su estado a :\n "+
 		"\n"+
-		"       "+electivo1+" Estado: "+Estado1+"\n "+
-		"       "+electivo2+" Estado: "+Estado2+"\n "+
-		"       "+electivo3+" Estado: "+Estado3+"\n \n "+
+		"     Prioridad 1:\n"+
+		"          Electivo: "+electivo1+"\n"+
+		"          Estado  : "+Estado1+" \n "+
+		"\n"+
+
+		"     Prioridad 2:\n"+
+		"          Electivo: "+electivo2+"\n"+
+		"          Estado  : "+Estado2+" \n "+
+		"\n"+
+
+		"     Prioridad 3:\n"+
+		"          Electivo: "+electivo3+"\n"+
+		"          Estado  : "+Estado3+" \n "+
+		"\n"+
+
 		"No responder este correo")
 
 	// Settings for SMTP server
