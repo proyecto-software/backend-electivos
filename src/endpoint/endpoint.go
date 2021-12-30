@@ -116,59 +116,8 @@ func GetCarrera(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
 
 }
 func GetSolicitud(c *gin.Context, db *sql.DB, logger *logrus.Entry) {
-	data := function.All_Solicitud_info(db)
-	var d []models.Registro_Postulacion2
-	var data_ models.Registro_Postulacion2
-	solicitud := true
-	for i := 0; i < len(data); i++ {
-		if i == 0 {
-			data_.Rut = data[i].Rut
-			data_.Carrera = data[i].Carrera
-			data_.Indicador = data[i].Indicador
-			data_.Cantidad_Electivos = data[i].Cantidad_Electivos
-			data_.Electivo1 = data[i].Electivo
-			data_.Estado1 = data[i].Estado
-		} else {
-			if solicitud {
-				if data_.Electivo2 == "" {
-					data_.Electivo2 = data[i].Electivo
-					data_.Estado2 = data[i].Estado
-				}
-				if data_.Electivo3 == "" {
-					data_.Electivo3 = data[i+1].Electivo
-					data_.Estado3 = data[i+1].Estado
-				}
-				solicitud = false
-			}
-			if data[i-1].Rut == data[i].Rut {
-				if data_.Electivo2 == "" {
-					data_.Electivo2 = data[i].Electivo
-					data_.Estado2 = data[i].Estado
-				}
-				if data_.Electivo3 == "" {
-					data_.Electivo3 = data[i+1].Electivo
-					data_.Estado3 = data[i+1].Estado
-				}
 
-			} else {
-				if !solicitud {
-					d = append(d, data_)
-					data_ = models.Registro_Postulacion2{}
-					//var data_ models.Registro_Postulacion2
-					data_.Rut = data[i].Rut
-					data_.Carrera = data[i].Carrera
-					data_.Indicador = data[i].Indicador
-					data_.Cantidad_Electivos = data[i].Cantidad_Electivos
-					data_.Electivo1 = data[i].Electivo
-					data_.Estado1 = data[i].Estado
-					solicitud = true
-					data_.IDGen = data_.IDGen + 1
-				}
-			}
-		}
-
-	}
-	d = append(d, data_)
+	d := function.All_Solicitud_info(db)
 	if len(d) != 0 {
 		c.JSON(200, d)
 	} else {
@@ -223,19 +172,23 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 		})
 		c.Abort()
 	}
-	//Alumno := function.Alumno_info(db, data.Rut)
+	Alumno := function.Alumno_info(db, data.Rut)
+
+	function.PostulacionUpdate(db, data.Estado1, data.Rut, data.Electivo1, logger)
 	if data.Estado1 {
-		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo1, logger)
-		//function.SendEmail2(Alumno.Correo, data.Electivo1)
+		function.SendEmail2(Alumno.Correo, data.Electivo1)
 	}
+
+	function.PostulacionUpdate(db, data.Estado2, data.Rut, data.Electivo2, logger)
 	if data.Estado2 {
-		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo2, logger)
-		//function.SendEmail2(Alumno.Correo, data.Electivo2)
+		function.SendEmail2(Alumno.Correo, data.Electivo2)
 	}
+
+	function.PostulacionUpdate(db, data.Estado3, data.Rut, data.Electivo3, logger)
 	if data.Estado3 {
-		function.Postulacion_approved(db, data.Estado1, data.Rut, data.Electivo2, logger)
-		//function.SendEmail2(Alumno.Correo, data.Electivo3)
+		function.SendEmail2(Alumno.Correo, data.Electivo3)
 	}
+
 	return
 	/* var postulacion models.Postulacion
 	cant_aceptados := function.Cantidad_aceptados(db, data.RutAlumnp, logger) //llame a la funcion sql
@@ -245,7 +198,7 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 	for i := 0; i < len(registro); i++ {
 		if !Sent {
 			if cant_aceptados == 0 {
-				function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
+				function.PostulacionUpdate(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 				function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
 				Sent = true
 			}
@@ -253,7 +206,7 @@ func EstadoPostulacion(c *gin.Context, db *sql.DB, logger *logrus.Entry) (data m
 				//ARREGLAR CUANDO SE TIENE 1 ACEPTADO CON 2 ELECTIVOS Y SE QUIERE ELIMINAR ESE ACEPTADO
 				//if registro[i].Estado == false && registro[i].Cantidad_Electivos == 2 {
 				if !registro[i].Estado {
-					function.Postulacion_approved(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
+					function.PostulacionUpdate(db, data.RutAlumnp, data.NombreElectivo, registro[i], postulacion, logger)
 					function.SendEmail2(Alumno.Correo, strconv.Itoa((registro[i].Id)), registro[i].Electivo)
 					Sent = true
 				} else {

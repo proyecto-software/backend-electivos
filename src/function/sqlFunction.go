@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"electivos-ucn/src/models"
 	"fmt"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 )
@@ -304,19 +305,21 @@ func Solicitud_info(db *sql.DB, id string) (solicitud models.Registro_Postulacio
 	}
 	return
 }
-func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion) {
-	rows, err := db.Query("SELECT a.rut,rp.carrera,rp.indicador,rp.electivo,rp.estado,cantidad_electivos  FROM public.solicitud s inner join alumno a on a.id = s.id_alumno inner join public.registro_postulacion rp on rp.rut = a.rut")
+func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion2) {
+	rows, err := db.Query("select s.id, a.rut, c.nombre carrera, s.cantidad_electivos ,postulacion1.electivo, postulacion1.estado,postulacion2.electivo, postulacion2.estado,postulacion3.electivo, postulacion3.estado from solicitud s inner join (select p.id, e.nombre electivo, p.aprobado estado from postulacion p inner join electivo e on p.id_electivo = e.id ) postulacion1 on postulacion1.id = s.id_postulacion_1 inner join (select p.id, e.nombre electivo, p.aprobado estado from postulacion p inner join electivo e on p.id_electivo = e.id ) postulacion2 on postulacion2.id = s.id_postulacion_2 inner join (select p.id, e.nombre electivo, p.aprobado estado from postulacion p inner join electivo e on p.id_electivo = e.id ) postulacion3 on postulacion3.id = s.id_postulacion_3 inner join alumno a on a.id = s.id_alumno inner join carrera c on c.id = a.id_carrera")
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 	i := 0
 	for rows.Next() {
-		var solicitud models.Registro_Postulacion
-		err = rows.Scan(&solicitud.Rut, &solicitud.Carrera, &solicitud.Indicador, &solicitud.Electivo, &solicitud.Estado, &solicitud.Cantidad_Electivos)
+		var solicitud models.Registro_Postulacion2
+		err = rows.Scan(&solicitud.Id, &solicitud.Rut, &solicitud.Carrera, &solicitud.Cantidad_Electivos, &solicitud.Electivo1, &solicitud.Estado1, &solicitud.Electivo2, &solicitud.Estado2, &solicitud.Electivo3, &solicitud.Estado3)
 		if err != nil {
 			panic(err)
 		} else {
+			Alumno := Alumno_info(db, solicitud.Rut)
+			solicitud.Indicador = strconv.Itoa(9 - Alumno.Semestre_incompleto)
 			solicitud.IDGen = i
 			solicitudes = append(solicitudes, solicitud)
 			i = i + 1
@@ -329,17 +332,16 @@ func All_Solicitud_info(db *sql.DB) (solicitudes []models.Registro_Postulacion) 
 	return
 }
 
-func Postulacion_approved(db *sql.DB, estado bool, rut string, electivo string, logger *logrus.Entry) {
-	approved1, e := db.Query(`UPDATE registro_postulacion SET estado = $1 WHERE rut = $2 and electivo = $3 `, estado, rut, electivo)
+func PostulacionUpdate(db *sql.DB, estado bool, rut string, electivo string, logger *logrus.Entry) {
+
 	approved2, e2 := db.Query(`UPDATE postulacion SET aprobado = $1 WHERE (id = (SELECT id_postulacion_1 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $2)) OR id = (SELECT id_postulacion_2 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $2)) OR id = (SELECT id_postulacion_3 FROM solicitud WHERE id_alumno = (SELECT id FROM alumno WHERE rut = $2)) ) AND id_electivo = (SELECT id FROM electivo WHERE nombre = $3)`, estado, rut, electivo)
-	if e != nil || e2 != nil {
+	if e2 != nil {
 		logger.Infof("Error cambiando el estado")
 		recoverError()
 
 	} else {
 		logger.Infof("estado de la postulación Cargado con Exito")
 	}
-	defer approved1.Close()
 	defer approved2.Close()
 }
 
